@@ -23,10 +23,17 @@ const ProductDetail = () => {
   const { getProductById, isLoading } = useProducts();
   const product = id ? getProductById(id) : undefined;
 
-  const handleContact = () => {
-    toast.success('Contact feature coming soon!', {
-      description: 'Enable Cloud to add messaging functionality.',
-    });
+  const handleCall = () => {
+    if (product?.contactNumber) {
+      window.location.href = `tel:${product.contactNumber}`;
+    }
+  };
+
+  const handleWhatsApp = () => {
+    if (product?.contactNumber) {
+      const message = encodeURIComponent(`Hi, I'm interested in your product: ${product.productName}`);
+      window.open(`https://wa.me/91${product.contactNumber}?text=${message}`, '_blank');
+    }
   };
 
   const handleShare = async () => {
@@ -134,6 +141,14 @@ const ProductDetail = () => {
                   <User className="h-5 w-5 text-muted-foreground" />
                   <span>Seller: {product.sellerName}</span>
                 </div>
+                {product.contactNumber && (
+                  <div className="flex items-center gap-3 text-foreground">
+                    <Phone className="h-5 w-5 text-muted-foreground" />
+                    <a href={`tel:${product.contactNumber}`} className="hover:text-primary transition-colors">
+                      {product.contactNumber}
+                    </a>
+                  </div>
+                )}
                 <div className="flex items-center gap-3 text-foreground">
                   <MapPin className="h-5 w-5 text-muted-foreground" />
                   <span>{product.address}</span>
@@ -167,9 +182,13 @@ const ProductDetail = () => {
 
               {/* Action Buttons */}
               <div className="flex gap-3">
-                <Button className="flex-1 gap-2" size="lg" onClick={handleContact}>
+                <Button className="flex-1 gap-2" size="lg" onClick={handleCall}>
+                  <Phone className="h-5 w-5" />
+                  Call Seller
+                </Button>
+                <Button className="flex-1 gap-2 bg-green-600 hover:bg-green-700" size="lg" onClick={handleWhatsApp}>
                   <MessageCircle className="h-5 w-5" />
-                  Contact Seller
+                  WhatsApp
                 </Button>
                 <Button variant="outline" size="lg" onClick={handleShare}>
                   <Share2 className="h-5 w-5" />

@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Upload, MapPin, Loader2 } from 'lucide-react';
+import { Upload, MapPin, Loader2, Phone } from 'lucide-react';
 
 const allCategories: ProductCategory[] = [
   'dairy', 'honey', 'spices', 'pickles', 'grains', 
@@ -31,6 +31,7 @@ const AddProduct = () => {
 
   const [formData, setFormData] = useState({
     sellerName: '',
+    contactNumber: '',
     productName: '',
     category: '' as ProductCategory | '',
     quantity: '',
@@ -70,6 +71,7 @@ const AddProduct = () => {
 
       addProduct({
         sellerName: formData.sellerName,
+        contactNumber: formData.contactNumber,
         productName: formData.productName,
         category: formData.category as ProductCategory,
         quantity: formData.quantity,
@@ -122,6 +124,23 @@ const AddProduct = () => {
                 onChange={(e) => handleChange('sellerName', e.target.value)}
                 required
               />
+            </div>
+
+            {/* Contact Number */}
+            <div className="space-y-2">
+              <Label htmlFor="contactNumber">Contact Number *</Label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="contactNumber"
+                  type="tel"
+                  placeholder="e.g., 9876543210"
+                  value={formData.contactNumber}
+                  onChange={(e) => handleChange('contactNumber', e.target.value)}
+                  className="pl-10"
+                  required
+                />
+              </div>
             </div>
 
             {/* Product Name */}
