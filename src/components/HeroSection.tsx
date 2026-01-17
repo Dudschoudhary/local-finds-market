@@ -1,0 +1,67 @@
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, ShoppingBag, Store } from 'lucide-react';
+
+const HeroSection = () => {
+  return (
+    <section className="relative overflow-hidden py-20 md:py-32">
+      {/* Background decoration */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-20 right-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-20 left-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
+      </div>
+
+      <div className="container">
+        <div className="max-w-3xl mx-auto text-center animate-fade-up">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-secondary-foreground text-sm font-medium mb-6">
+            <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse" />
+            Connecting local sellers with buyers
+          </div>
+
+          <h1 className="font-display text-4xl md:text-6xl font-bold text-foreground leading-tight mb-6">
+            Discover{' '}
+            <span className="text-gradient">Fresh & Homemade</span>
+            {' '}Products Near You
+          </h1>
+
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            From pure desi ghee to organic honey, find authentic local products from trusted sellers in your area. Support small businesses and get quality you can trust.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link to="/products">
+              <Button size="lg" className="gap-2 px-8 text-base glow-primary">
+                <ShoppingBag className="h-5 w-5" />
+                Browse Products
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to="/add-product">
+              <Button size="lg" variant="outline" className="gap-2 px-8 text-base">
+                <Store className="h-5 w-5" />
+                Start Selling
+              </Button>
+            </Link>
+          </div>
+
+          <div className="mt-12 flex items-center justify-center gap-8 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🛡️</span>
+              <span>Verified Sellers</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">📍</span>
+              <span>Location-Based</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🌿</span>
+              <span>Fresh & Natural</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default HeroSection;
