@@ -1,6 +1,7 @@
 export interface Product {
   id: string;
   sellerName: string;
+  contactNumber: string;
   productName: string;
   category: ProductCategory;
   quantity: string;

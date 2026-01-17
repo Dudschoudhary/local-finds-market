@@ -4,6 +4,7 @@ export const mockProducts: Product[] = [
   {
     id: '1',
     sellerName: 'Ramesh Patel',
+    contactNumber: '9876543210',
     productName: 'Pure Desi Cow Ghee',
     category: 'dairy',
     quantity: '1 kg',
@@ -17,6 +18,7 @@ export const mockProducts: Product[] = [
   {
     id: '2',
     sellerName: 'Sunita Devi',
+    contactNumber: '9123456789',
     productName: 'Organic Wild Honey',
     category: 'honey',
     quantity: '500g',
@@ -30,6 +32,7 @@ export const mockProducts: Product[] = [
   {
     id: '3',
     sellerName: 'Lakshmi Foods',
+    contactNumber: '9988776655',
     productName: 'Homemade Mango Pickle',
     category: 'pickles',
     quantity: '400g',
@@ -43,6 +46,7 @@ export const mockProducts: Product[] = [
   {
     id: '4',
     sellerName: 'Sharma Spices',
+    contactNumber: '9001234567',
     productName: 'Fresh Turmeric Powder',
     category: 'spices',
     quantity: '250g',
@@ -56,6 +60,7 @@ export const mockProducts: Product[] = [
   {
     id: '5',
     sellerName: 'Green Valley Farm',
+    contactNumber: '9556677889',
     productName: 'Organic Brown Rice',
     category: 'grains',
     quantity: '5 kg',
@@ -69,6 +74,7 @@ export const mockProducts: Product[] = [
   {
     id: '6',
     sellerName: 'Kerala Naturals',
+    contactNumber: '9447123456',
     productName: 'Cold Pressed Coconut Oil',
     category: 'oils',
     quantity: '1 litre',
