@@ -13,10 +13,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <article className="card-elevated rounded-xl overflow-hidden bg-card border border-border/50">
         <div className="aspect-[4/3] overflow-hidden relative">
           <img
-            src={product.imageUrl}
+            src={product.images[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'}
             alt={product.productName}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
+          {product.images.length > 1 && (
+            <span className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+              +{product.images.length - 1} photos
+            </span>
+          )}
           <Badge 
             className="absolute top-3 left-3 bg-accent text-accent-foreground border-0"
           >

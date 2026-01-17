@@ -1,4 +1,5 @@
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useProducts } from '@/hooks/useProducts';
@@ -13,7 +14,9 @@ import {
   Calendar,
   MessageCircle,
   Phone,
-  Share2
+  Share2,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -22,6 +25,7 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { getProductById, isLoading } = useProducts();
   const product = id ? getProductById(id) : undefined;
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handleCall = () => {
     if (product?.contactNumber) {
@@ -46,6 +50,18 @@ const ProductDetail = () => {
     } else {
       await navigator.clipboard.writeText(window.location.href);
       toast.success('Link copied to clipboard!');
+    }
+  };
+
+  const nextImage = () => {
+    if (product) {
+      setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+    }
+  };
+
+  const prevImage = () => {
+    if (product) {
+      setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
     }
   };
 
@@ -107,15 +123,62 @@ const ProductDetail = () => {
           </Button>
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {/* Product Image */}
+            {/* Product Images */}
             <div className="space-y-4">
-              <div className="aspect-square rounded-xl overflow-hidden bg-muted">
+              {/* Main Image with Navigation */}
+              <div className="aspect-square rounded-xl overflow-hidden bg-muted relative group">
                 <img
-                  src={product.imageUrl}
-                  alt={product.productName}
+                  src={product.images[currentImageIndex] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'}
+                  alt={`${product.productName} - Image ${currentImageIndex + 1}`}
                   className="h-full w-full object-cover"
                 />
+                
+                {/* Navigation Arrows - Only show if multiple images */}
+                {product.images.length > 1 && (
+                  <>
+                    <button
+                      onClick={prevImage}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    <button
+                      onClick={nextImage}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
+                    
+                    {/* Image Counter */}
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/60 text-white text-sm px-3 py-1 rounded-full">
+                      {currentImageIndex + 1} / {product.images.length}
+                    </div>
+                  </>
+                )}
               </div>
+
+              {/* Thumbnail Gallery - Only show if multiple images */}
+              {product.images.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto pb-2">
+                  {product.images.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+                        index === currentImageIndex 
+                          ? 'border-primary' 
+                          : 'border-transparent hover:border-border'
+                      }`}
+                    >
+                      <img
+                        src={image}
+                        alt={`Thumbnail ${index + 1}`}
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Product Info */}
