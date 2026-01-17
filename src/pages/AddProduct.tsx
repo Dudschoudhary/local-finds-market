@@ -16,18 +16,20 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Upload, MapPin, Loader2, Phone } from 'lucide-react';
+import { Upload, MapPin, Loader2, Phone, X, ImagePlus } from 'lucide-react';
 
 const allCategories: ProductCategory[] = [
   'dairy', 'honey', 'spices', 'pickles', 'grains', 
   'oils', 'sweets', 'vegetables', 'fruits', 'handicrafts'
 ];
 
+const MAX_IMAGES = 5;
+
 const AddProduct = () => {
   const navigate = useNavigate();
   const { addProduct } = useProducts();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string>('');
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const [formData, setFormData] = useState({
     sellerName: '',
@@ -35,23 +37,37 @@ const AddProduct = () => {
     productName: '',
     category: '' as ProductCategory | '',
     quantity: '',
-    imageUrl: '',
     description: '',
     price: '',
     address: '',
   });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
+    const files = e.target.files;
+    if (!files) return;
+
+    const remainingSlots = MAX_IMAGES - imagePreviews.length;
+    const filesToProcess = Array.from(files).slice(0, remainingSlots);
+
+    if (files.length > remainingSlots) {
+      toast.warning(`You can only upload ${MAX_IMAGES} images. Only first ${remainingSlots} will be added.`);
+    }
+
+    filesToProcess.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const result = reader.result as string;
-        setImagePreview(result);
-        setFormData(prev => ({ ...prev, imageUrl: result }));
+        setImagePreviews(prev => [...prev, result]);
       };
       reader.readAsDataURL(file);
-    }
+    });
+
+    // Reset the input so user can select same file again if needed
+    e.target.value = '';
+  };
+
+  const removeImage = (index: number) => {
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,9 +81,10 @@ const AddProduct = () => {
     setIsSubmitting(true);
 
     try {
-      // Use a placeholder image if none provided
-      const imageUrl = formData.imageUrl || 
-        `https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop`;
+      // Use placeholder image if none provided
+      const images = imagePreviews.length > 0 
+        ? imagePreviews 
+        : ['https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'];
 
       addProduct({
         sellerName: formData.sellerName,
@@ -75,7 +92,7 @@ const AddProduct = () => {
         productName: formData.productName,
         category: formData.category as ProductCategory,
         quantity: formData.quantity,
-        imageUrl,
+        images,
         description: formData.description,
         price: parseFloat(formData.price),
         address: formData.address,
@@ -202,47 +219,64 @@ const AddProduct = () => {
               </div>
             </div>
 
-            {/* Product Image */}
+            {/* Product Images - Multiple Upload */}
             <div className="space-y-2">
-              <Label>Product Image</Label>
-              <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 transition-colors">
-                {imagePreview ? (
-                  <div className="space-y-4">
-                    <img 
-                      src={imagePreview} 
-                      alt="Preview" 
-                      className="max-h-48 mx-auto rounded-lg object-cover"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setImagePreview('');
-                        setFormData(prev => ({ ...prev, imageUrl: '' }));
-                      }}
-                    >
-                      Remove Image
-                    </Button>
-                  </div>
-                ) : (
+              <Label>Product Images (up to {MAX_IMAGES})</Label>
+              
+              {/* Image Previews Grid */}
+              {imagePreviews.length > 0 && (
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
+                  {imagePreviews.map((preview, index) => (
+                    <div key={index} className="relative group aspect-square">
+                      <img 
+                        src={preview} 
+                        alt={`Preview ${index + 1}`} 
+                        className="h-full w-full object-cover rounded-lg border border-border"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                      {index === 0 && (
+                        <span className="absolute bottom-1 left-1 bg-primary text-primary-foreground text-xs px-1.5 py-0.5 rounded">
+                          Main
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Upload Area */}
+              {imagePreviews.length < MAX_IMAGES && (
+                <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 transition-colors">
                   <label className="cursor-pointer block">
-                    <Upload className="h-10 w-10 mx-auto text-muted-foreground mb-2" />
+                    {imagePreviews.length === 0 ? (
+                      <Upload className="h-10 w-10 mx-auto text-muted-foreground mb-2" />
+                    ) : (
+                      <ImagePlus className="h-10 w-10 mx-auto text-muted-foreground mb-2" />
+                    )}
                     <p className="text-sm text-muted-foreground mb-1">
-                      Click to upload product image
+                      {imagePreviews.length === 0 
+                        ? 'Click to upload product images' 
+                        : `Add more images (${MAX_IMAGES - imagePreviews.length} remaining)`}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      PNG, JPG up to 5MB
+                      PNG, JPG up to 5MB each
                     </p>
                     <input
                       type="file"
                       accept="image/*"
+                      multiple
                       className="hidden"
                       onChange={handleImageChange}
                     />
                   </label>
-                )}
-              </div>
+                </div>
+              )}
             </div>
 
             {/* Description */}
