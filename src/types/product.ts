@@ -14,6 +14,10 @@ export interface Product {
     lng: number;
   };
   createdAt: Date;
+  // Optional owner id (user who listed the product)
+  ownerId?: string;
+  // Whether the product is sold
+  isSold?: boolean;
 }
 
 export type ProductCategory = 
