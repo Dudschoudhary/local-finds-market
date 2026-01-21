@@ -1,4 +1,18 @@
 const Product = require('../models/productModel');
+const cloudinary = require('cloudinary').v2;
+
+// Configure cloudinary if env vars present
+if (process.env.CLOUDINARY_URL) {
+  cloudinary.config({ cloudinary_url: process.env.CLOUDINARY_URL });
+} else if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+}
+
+const CLOUDINARY_ENABLED = !!(process.env.CLOUDINARY_URL || (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET));
 
 // GET /api/products
 const getProducts = async (req, res) => {
@@ -57,6 +71,26 @@ const createProduct = async (req, res) => {
     // If authentication middleware attached a user, link ownerId
     if (req.user && req.user.id) {
       payload.ownerId = req.user.id;
+    }
+
+    // If images are sent as data URIs and Cloudinary is configured, upload them
+    if (Array.isArray(payload.images) && payload.images.length > 0 && CLOUDINARY_ENABLED) {
+      const uploaded = [];
+      for (const img of payload.images) {
+        if (typeof img === 'string' && img.startsWith('data:')) {
+          try {
+            const result = await cloudinary.uploader.upload(img, { folder: 'localmart/products' });
+            uploaded.push(result.secure_url || result.url);
+          } catch (err) {
+            console.error('Cloudinary upload failed for one image, keeping original data URL', err);
+            // Fallback: keep original (will be large). Alternatively you could reject the request.
+            uploaded.push(img);
+          }
+        } else {
+          uploaded.push(img);
+        }
+      }
+      payload.images = uploaded;
     }
 
     const product = new Product(payload);

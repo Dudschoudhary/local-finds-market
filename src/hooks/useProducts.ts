@@ -80,6 +80,49 @@ export const useProducts = () => {
     }, {} as Record<ProductCategory, number>);
   };
 
+  // Update product (owner only) - sends Authorization header when available
+  const updateProduct = async (id: string, updates: Partial<Product>) => {
+    const headers: any = { 'Content-Type': 'application/json' };
+    if (user && user.token) headers.Authorization = `Bearer ${user.token}`;
+
+    const res = await fetch(`${API_BASE}/api/products/${encodeURIComponent(id)}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(updates),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => null);
+      throw new Error(err?.message || 'Failed to update product');
+    }
+
+    const updated = await res.json();
+    const updatedDoc = updated && updated.data ? updated.data : updated;
+    const normalized = { ...updatedDoc, id: updatedDoc.id ?? updatedDoc._id };
+    setProducts(prev => prev.map(p => (p.id === normalized.id ? normalized as Product : p)));
+    return normalized as Product;
+  };
+
+  // Delete product (owner only)
+  const deleteProduct = async (id: string) => {
+    const headers: any = {};
+    if (user && user.token) headers.Authorization = `Bearer ${user.token}`;
+
+    const res = await fetch(`${API_BASE}/api/products/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers,
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => null);
+      throw new Error(err?.message || 'Failed to delete product');
+    }
+
+    // Remove locally
+    setProducts(prev => prev.filter(p => p.id !== id));
+    return true;
+  };
+
   return {
     products,
     isLoading,
@@ -88,5 +131,7 @@ export const useProducts = () => {
     getProductById,
     getProductsByCategory,
     getCategoryCounts,
+    updateProduct,
+    deleteProduct,
   };
 };

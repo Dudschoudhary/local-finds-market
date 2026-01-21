@@ -42,6 +42,33 @@ const AddProduct = () => {
     address: '',
   });
 
+  // Live location state
+  const [location, setLocation] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null });
+  const [locating, setLocating] = useState(false);
+
+  const requestLocation = () => {
+    if (!navigator.geolocation) {
+      return toast.error('Geolocation is not supported by your browser');
+    }
+
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        setLocation({ lat, lng });
+        toast.success('Location captured');
+        setLocating(false);
+      },
+      (err) => {
+        console.error('Geolocation error', err);
+        toast.error('Unable to retrieve location');
+        setLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 15000 }
+    );
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -78,6 +105,12 @@ const AddProduct = () => {
       return;
     }
 
+    // Require a captured location
+    if (location.lat === null || location.lng === null) {
+      toast.error('Please capture your live location using the "Use GPS" button');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -96,7 +129,7 @@ const AddProduct = () => {
         description: formData.description,
         price: parseFloat(formData.price),
         address: formData.address,
-        location: { lat: 0, lng: 0 }, // Will be filled with real location via Cloud
+        location: { lat: location.lat as number, lng: location.lng as number },
       });
 
       toast.success('Product listed successfully!', {
@@ -308,15 +341,41 @@ const AddProduct = () => {
                   variant="ghost"
                   size="sm"
                   className="absolute right-1 top-1/2 -translate-y-1/2 gap-1 text-xs"
-                  onClick={() => toast.info('GPS location feature requires Cloud integration')}
+                  onClick={requestLocation}
                 >
                   <MapPin className="h-3.5 w-3.5" />
-                  Use GPS
+                  {locating ? 'Locating…' : 'Use GPS'}
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Enable Cloud for live location & map features
+                Capture your live GPS location. This will be saved with the product.
               </p>
+
+              {/* Map preview (if location captured) */}
+              {location.lat !== null && location.lng !== null && (
+                <div className="mt-3 rounded-lg overflow-hidden border border-border">
+                  <div className="p-2 flex items-center justify-between text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4" />
+                      <div>
+                        <div>Lat: {location.lat.toFixed(6)}</div>
+                        <div>Lng: {location.lng.toFixed(6)}</div>
+                      </div>
+                    </div>
+                    <Button size="sm" variant="ghost" onClick={() => setLocation({ lat: null, lng: null })}>
+                      Clear
+                    </Button>
+                  </div>
+                  <div className="aspect-video">
+                    <iframe
+                      title="location-preview"
+                      className="w-full h-full border-0"
+                      src={`https://www.google.com/maps?q=${location.lat},${location.lng}&z=15&output=embed`}
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Submit Button */}

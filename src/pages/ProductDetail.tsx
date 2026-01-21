@@ -27,6 +27,42 @@ const ProductDetail = () => {
   const product = id ? getProductById(id) : undefined;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  // State to hold viewer's current location when requested
+  const [viewerLocation, setViewerLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [locating, setLocating] = useState(false);
+
+  const requestViewerLocationAndDirections = () => {
+    if (!product || !product.location) {
+      toast.error('Product location not available');
+      return;
+    }
+    if (!navigator.geolocation) {
+      toast.error('Geolocation not supported by your browser');
+      return;
+    }
+
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        setViewerLocation({ lat, lng });
+        // Open Google Maps directions in new tab
+        const dest = `${product.location.lat},${product.location.lng}`;
+        const origin = `${lat},${lng}`;
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}`;
+        window.open(url, '_blank');
+        setLocating(false);
+      },
+      (err) => {
+        console.error('Geolocation error', err);
+        toast.error('Unable to retrieve your location');
+        setLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 15000 }
+    );
+  };
+
   const handleCall = () => {
     if (product?.contactNumber) {
       window.location.href = `tel:${product.contactNumber}`;
@@ -233,15 +269,52 @@ const ProductDetail = () => {
                 </p>
               </div>
 
-              {/* Location Map Placeholder */}
-              <div className="rounded-xl overflow-hidden border border-border">
-                <div className="aspect-video bg-muted flex items-center justify-center">
-                  <div className="text-center text-muted-foreground">
-                    <MapPin className="h-8 w-8 mx-auto mb-2" />
-                    <p className="text-sm">Map view available with Cloud integration</p>
+              {/* Show product location if available */}
+              {product.location ? (
+                <div className="rounded-xl overflow-hidden border border-border">
+                  <div className="p-3 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <MapPin className="h-5 w-5 text-muted-foreground" />
+                      <div className="text-sm text-foreground">
+                        <div>Lat: {Number(product.location.lat).toFixed(6)}</div>
+                        <div>Lng: {Number(product.location.lng).toFixed(6)}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button size="sm" variant="ghost" onClick={() => window.open(`https://www.google.com/maps?q=${product.location.lat},${product.location.lng}&z=15&output=embed`, '_blank')}>
+                        Open in Maps
+                      </Button>
+                      <Button size="sm" onClick={requestViewerLocationAndDirections} disabled={locating}>
+                        {locating ? 'Locating…' : 'Get Directions'}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="aspect-video">
+                    <iframe
+                      title="product-location"
+                      className="w-full h-full border-0"
+                      src={`https://www.google.com/maps?q=${product.location.lat},${product.location.lng}&z=15&output=embed`}
+                      loading="lazy"
+                    />
+                  </div>
+
+                  {viewerLocation && (
+                    <div className="p-3 text-xs text-muted-foreground">
+                      Your location captured: {viewerLocation.lat.toFixed(6)}, {viewerLocation.lng.toFixed(6)} — directions opened in new tab.
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="rounded-xl overflow-hidden border border-border">
+                  <div className="aspect-video bg-muted flex items-center justify-center">
+                    <div className="text-center text-muted-foreground">
+                      <MapPin className="h-8 w-8 mx-auto mb-2" />
+                      <p className="text-sm">Map view available with Cloud integration</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex gap-3">
