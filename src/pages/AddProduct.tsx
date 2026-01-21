@@ -23,7 +23,82 @@ const allCategories: ProductCategory[] = [
   'oils', 'sweets', 'vegetables', 'fruits', 'handicrafts'
 ];
 
-const MAX_IMAGES = 5;
+const MAX_IMAGES = 3;
+
+// Helpers to read and compress images client-side so each image is under 1MB
+const readFileAsDataURL = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+const dataURLToBlob = (dataURL: string) => {
+  const parts = dataURL.split(',');
+  const mime = parts[0].match(/:(.*?);/)?.[1] || '';
+  const binary = atob(parts[1]);
+  const len = binary.length;
+  const arr = new Uint8Array(len);
+  for (let i = 0; i < len; i++) arr[i] = binary.charCodeAt(i);
+  return new Blob([arr], { type: mime });
+};
+
+const compressImage = async (file: File, maxBytes = 1024 * 1024): Promise<string> => {
+  // If already small enough, just return original dataURL
+  if (file.size <= maxBytes) return readFileAsDataURL(file);
+
+  const originalDataUrl = await readFileAsDataURL(file);
+
+  // Create image
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = originalDataUrl;
+  });
+
+  // Start with original dimensions
+  let [width, height] = [img.width, img.height];
+
+  // Work on a canvas and iteratively reduce quality and size until under maxBytes
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas not available');
+
+  // If input is PNG (possibly with transparency), we'll convert to JPEG for compression
+  const isPng = file.type === 'image/png';
+
+  let quality = 0.92;
+  let dataUrl = '';
+
+  // Try reducing quality first, then dimensions if needed
+  for (let attempt = 0; attempt < 12; attempt++) {
+    // On certain attempts reduce dimensions
+    if (attempt > 6) {
+      width = Math.round(width * 0.85);
+      height = Math.round(height * 0.85);
+    }
+
+    canvas.width = width;
+    canvas.height = height;
+    // clear + draw
+    ctx.clearRect(0, 0, width, height);
+    ctx.drawImage(img, 0, 0, width, height);
+
+    // Convert to jpeg to get better compression; keep original mime if small transparency isn't a concern
+    const mimeType = isPng ? 'image/jpeg' : (file.type || 'image/jpeg');
+    dataUrl = canvas.toDataURL(mimeType, quality);
+    const blob = dataURLToBlob(dataUrl);
+    if (blob.size <= maxBytes) return dataUrl;
+
+    // reduce quality for next iteration
+    quality = Math.max(quality - 0.1, 0.35);
+  }
+
+  // Final fallback: return what we have even if slightly over limit
+  return dataUrl || originalDataUrl;
+};
 
 const AddProduct = () => {
   const navigate = useNavigate();
@@ -69,27 +144,55 @@ const AddProduct = () => {
     );
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
     const remainingSlots = MAX_IMAGES - imagePreviews.length;
-    const filesToProcess = Array.from(files).slice(0, remainingSlots);
+    let added = 0;
 
-    if (files.length > remainingSlots) {
+    const filesArr = Array.from(files);
+    if (filesArr.length > remainingSlots) {
       toast.warning(`You can only upload ${MAX_IMAGES} images. Only first ${remainingSlots} will be added.`);
     }
 
-    filesToProcess.forEach(file => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setImagePreviews(prev => [...prev, result]);
-      };
-      reader.readAsDataURL(file);
-    });
+    for (const file of filesArr.slice(0, remainingSlots)) {
+      try {
+        // Enforce image file type
+        if (!file.type.startsWith('image/')) {
+          toast.error('Only image files are allowed');
+          continue;
+        }
 
-    // Reset the input so user can select same file again if needed
+        // If file is <= 1MB, just read and add
+        const MAX_BYTES = 1024 * 1024; // 1MB
+        let dataUrl: string;
+        if (file.size <= MAX_BYTES) {
+          dataUrl = await readFileAsDataURL(file);
+        } else {
+          toast('Large image detected — compressing...', { icon: '⚙️' });
+          dataUrl = await compressImage(file, MAX_BYTES);
+          const blob = dataURLToBlob(dataUrl);
+          if (blob.size > MAX_BYTES) {
+            toast.error('Unable to compress image under 1MB; please choose a smaller image');
+            continue;
+          }
+        }
+
+        setImagePreviews(prev => [...prev, dataUrl]);
+        added++;
+      } catch (err) {
+        console.error('Error processing image', err);
+        toast.error('Failed to process one of the images');
+      }
+    }
+
+    if (added === 0 && filesArr.length > 0) {
+      // if nothing added, provide guidance
+      toast.error('No images were added. Each image must be an image file and under 1MB (will be compressed automatically).');
+    }
+
+    // Reset input so same file can be selected again
     e.target.value = '';
   };
 
@@ -298,7 +401,7 @@ const AddProduct = () => {
                         : `Add more images (${MAX_IMAGES - imagePreviews.length} remaining)`}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      PNG, JPG up to 5MB each
+                      PNG, JPG up to 1MB each
                     </p>
                     <input
                       type="file"
