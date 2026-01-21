@@ -39,10 +39,10 @@ const Products = () => {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         p => 
-          p.productName.toLowerCase().includes(query) ||
-          p.description.toLowerCase().includes(query) ||
-          p.sellerName.toLowerCase().includes(query) ||
-          p.address.toLowerCase().includes(query)
+          (p.productName ?? '').toLowerCase().includes(query) ||
+          (p.description ?? '').toLowerCase().includes(query) ||
+          (p.sellerName ?? '').toLowerCase().includes(query) ||
+          (p.address ?? '').toLowerCase().includes(query)
       );
     }
 

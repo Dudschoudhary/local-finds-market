@@ -86,7 +86,7 @@ const AddProduct = () => {
         ? imagePreviews 
         : ['https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'];
 
-      addProduct({
+      await addProduct({
         sellerName: formData.sellerName,
         contactNumber: formData.contactNumber,
         productName: formData.productName,
@@ -104,8 +104,8 @@ const AddProduct = () => {
       });
 
       navigate('/products');
-    } catch (error) {
-      toast.error('Failed to list product. Please try again.');
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to list product. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
