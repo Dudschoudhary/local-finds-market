@@ -7,7 +7,7 @@ export interface Product {
   quantity: string;
   images: string[]; // Array of image URLs
   description: string;
-  price: number;
+  price?: number; // optional; rental listings use rentalPrice
   address: string;
   location: {
     lat: number;
@@ -18,7 +18,16 @@ export interface Product {
   ownerId?: string;
   // Whether the product is sold
   isSold?: boolean;
+
+  // Listing type: sale or rent
+  listingType?: 'sale' | 'rent';
+  // Rental specific fields
+  rentalType?: RentalType;
+  rentalStatus?: 'available' | 'rented';
+  rentalPrice?: number;
 }
+
+export type RentalType = 'machine' | 'vehicle' | 'shop' | 'room' | 'other';
 
 export type ProductCategory = 
   | 'dairy'

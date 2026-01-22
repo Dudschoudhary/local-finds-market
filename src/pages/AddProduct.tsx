@@ -117,6 +117,15 @@ const AddProduct = () => {
     address: '',
   });
 
+  // New listing/rental state
+  const [listingType, setListingType] = useState<'sale' | 'rent'>('sale');
+  const [rentalType, setRentalType] = useState<'machine' | 'vehicle' | 'shop' | 'room' | 'other'>('machine');
+  const [rentalPrice, setRentalPrice] = useState('');
+  // Unit states
+  const [quantityUnit, setQuantityUnit] = useState('piece');
+  const [priceUnit, setPriceUnit] = useState('per piece');
+  const [quantityMode, setQuantityMode] = useState<'item' | 'combo'>('item');
+
   // Live location state
   const [location, setLocation] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null });
   const [locating, setLocating] = useState(false);
@@ -214,6 +223,19 @@ const AddProduct = () => {
       return;
     }
 
+    // Validate based on listing type
+    if (listingType === 'sale') {
+      if (!formData.price) {
+        toast.error('Please enter a price for sale listings');
+        return;
+      }
+    } else {
+      if (!rentalPrice) {
+        toast.error('Please enter a rental price for rent listings');
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -222,7 +244,7 @@ const AddProduct = () => {
         ? imagePreviews 
         : ['https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'];
 
-      await addProduct({
+      const payload: any = {
         sellerName: formData.sellerName,
         contactNumber: formData.contactNumber,
         productName: formData.productName,
@@ -230,10 +252,23 @@ const AddProduct = () => {
         quantity: formData.quantity,
         images,
         description: formData.description,
-        price: parseFloat(formData.price),
         address: formData.address,
         location: { lat: location.lat as number, lng: location.lng as number },
-      });
+        listingType,
+        quantityUnit,
+        priceUnit,
+        quantityMode,
+      };
+
+      if (listingType === 'sale') {
+        payload.price = parseFloat(formData.price || '0');
+      } else {
+        payload.rentalPrice = parseFloat(rentalPrice || '0');
+        payload.rentalType = rentalType;
+        payload.rentalStatus = 'available';
+      }
+
+      await addProduct(payload);
 
       toast.success('Product listed successfully!', {
         description: 'Your product is now visible to buyers.',
@@ -262,24 +297,34 @@ const AddProduct = () => {
               List Your Product
             </h1>
             <p className="text-muted-foreground">
-              Fill in the details below to start selling your product
+              Fill in the details below to start selling or renting your product
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Seller Name */}
+            {/* Top toggles: Sell / Rent */}
+            <div className="flex gap-3">
+              <button type="button" onClick={() => setListingType('sale')} className={`px-3 py-1 rounded ${listingType === 'sale' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>
+                Sell
+              </button>
+              <button type="button" onClick={() => setListingType('rent')} className={`px-3 py-1 rounded ${listingType === 'rent' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>
+                Rent
+              </button>
+            </div>
+
+            {/* Seller / Rent Name */}
             <div className="space-y-2">
-              <Label htmlFor="sellerName">Seller Name *</Label>
+              <Label htmlFor="sellerName">{listingType === 'sale' ? 'Seller Name *' : 'Rent Name *'}</Label>
               <Input
                 id="sellerName"
-                placeholder="Enter your name or business name"
+                placeholder={listingType === 'sale' ? 'Enter seller name or business' : 'Enter contact name for rental'}
                 value={formData.sellerName}
                 onChange={(e) => handleChange('sellerName', e.target.value)}
                 required
               />
             </div>
 
-            {/* Contact Number */}
+            {/* Contact Number (required) */}
             <div className="space-y-2">
               <Label htmlFor="contactNumber">Contact Number *</Label>
               <div className="relative">
@@ -328,32 +373,110 @@ const AddProduct = () => {
               </Select>
             </div>
 
-            {/* Quantity & Price */}
+            {/* Quantity & Price / Rental Price */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="quantity">Quantity *</Label>
-                <Input
-                  id="quantity"
-                  placeholder="e.g., 1 kg, 500g, 1 litre"
-                  value={formData.quantity}
-                  onChange={(e) => handleChange('quantity', e.target.value)}
-                  required
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="quantity"
+                    placeholder="e.g., 1"
+                    value={formData.quantity}
+                    onChange={(e) => handleChange('quantity', e.target.value)}
+                    required
+                  />
+                  {/* Quantity unit select - options change based on listingType if needed */}
+                  <select value={quantityUnit} onChange={(e) => setQuantityUnit(e.target.value)} className="px-2 py-1 rounded border">
+                    {listingType === 'sale' ? (
+                      <>
+                        <option value="kg">kg</option>
+                        <option value="gm">gm</option>
+                        <option value="liter">liter</option>
+                        <option value="quintal">quintal</option>
+                        <option value="dhara">dhara</option>
+                        <option value="man">man</option>
+                        <option value="piece">piece</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="piece">Item</option>
+                        <option value="combo">Combo</option>
+                      </>
+                    )}
+                  </select>
+                </div>
+                {/* For rent show quantity mode toggle as well (Item / Combo) */}
+                {listingType === 'rent' && (
+                  <div className="mt-2 flex gap-2">
+                    <button type="button" onClick={() => setQuantityMode('item')} className={`px-3 py-1 rounded ${quantityMode === 'item' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Item</button>
+                    <button type="button" onClick={() => setQuantityMode('combo')} className={`px-3 py-1 rounded ${quantityMode === 'combo' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Combo</button>
+                  </div>
+                )}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="price">Price (₹) *</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="e.g., 450"
-                  value={formData.price}
-                  onChange={(e) => handleChange('price', e.target.value)}
-                  required
-                />
-              </div>
+              {listingType === 'sale' ? (
+                <div className="space-y-2">
+                  <Label htmlFor="price">Price (₹) *</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="price"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="e.g., 450"
+                      value={formData.price}
+                      onChange={(e) => handleChange('price', e.target.value)}
+                      required
+                    />
+                    <select value={priceUnit} onChange={(e) => setPriceUnit(e.target.value)} className="px-2 py-1 rounded border">
+                      <option value="per kg">per kg</option>
+                      <option value="per gm">per gm</option>
+                      <option value="per liter">per liter</option>
+                      <option value="per quintal">per quintal</option>
+                      <option value="per dhara">per dhara</option>
+                      <option value="per man">per man</option>
+                      <option value="per piece">per piece</option>
+                    </select>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <Label htmlFor="rentalPrice">Rental Price (₹) *</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="rentalPrice"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="e.g., 500"
+                      value={rentalPrice}
+                      onChange={(e) => setRentalPrice(e.target.value)}
+                      required
+                    />
+                    <select value={priceUnit} onChange={(e) => setPriceUnit(e.target.value)} className="px-2 py-1 rounded border">
+                      <option value="per piece">per piece</option>
+                      <option value="combo">combo</option>
+                      <option value="per km">per km</option>
+                      <option value="per day">per day</option>
+                      <option value="per month">per month</option>
+                    </select>
+                  </div>
+                </div>
+              )}
             </div>
+
+            {/* If rental, show rental type selector */}
+            {listingType === 'rent' && (
+              <div className="space-y-2">
+                <Label>Rental Item Type *</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button type="button" onClick={() => setRentalType('machine')} className={`px-2 py-1 rounded ${rentalType === 'machine' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Machine</button>
+                  <button type="button" onClick={() => setRentalType('vehicle')} className={`px-2 py-1 rounded ${rentalType === 'vehicle' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Vehicle</button>
+                  <button type="button" onClick={() => setRentalType('shop')} className={`px-2 py-1 rounded ${rentalType === 'shop' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Shop</button>
+                  <button type="button" onClick={() => setRentalType('room')} className={`px-2 py-1 rounded ${rentalType === 'room' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Room</button>
+                  <button type="button" onClick={() => setRentalType('other')} className={`px-2 py-1 rounded ${rentalType === 'other' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Other</button>
+                </div>
+              </div>
+            )}
 
             {/* Product Images - Multiple Upload */}
             <div className="space-y-2">

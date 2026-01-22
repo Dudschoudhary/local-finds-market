@@ -63,9 +63,25 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const payload = req.body;
-    // Basic validation
-    if (!payload.productName || !payload.price || !payload.sellerName || !payload.contactNumber) {
+    // Basic validation: require name and contact
+    if (!payload.productName || !payload.sellerName || !payload.contactNumber) {
       return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    // Determine listing type (default sale)
+    payload.listingType = payload.listingType || 'sale';
+
+    // Validate price/rentalPrice based on listing type
+    if (payload.listingType === 'sale') {
+      if (payload.price == null) {
+        return res.status(400).json({ message: 'Price is required for sale listings' });
+      }
+    } else if (payload.listingType === 'rent') {
+      if (payload.rentalPrice == null) {
+        return res.status(400).json({ message: 'rentalPrice is required for rent listings' });
+      }
+      // ensure rental status has a default
+      payload.rentalStatus = payload.rentalStatus || 'available';
     }
 
     // If authentication middleware attached a user, link ownerId
@@ -186,6 +202,37 @@ const markAsSold = async (req, res) => {
   }
 };
 
+// POST /api/products/:id/rent - mark as rented (owner only)
+const markAsRented = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id).exec();
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    // Ensure this is a rental listing
+    if (product.listingType !== 'rent') {
+      return res.status(400).json({ message: 'Product is not a rental listing' });
+    }
+
+    if (product.ownerId) {
+      if (!req.user || !req.user.id) return res.status(401).json({ message: 'Unauthorized' });
+      if (String(product.ownerId) !== String(req.user.id)) {
+        return res.status(403).json({ message: 'Forbidden: you are not the owner of this product' });
+      }
+    }
+
+    if (product.rentalStatus === 'rented') return res.status(400).json({ message: 'Product already marked as rented' });
+
+    product.rentalStatus = 'rented';
+    await product.save();
+
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
@@ -193,4 +240,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   markAsSold,
+  markAsRented,
 };

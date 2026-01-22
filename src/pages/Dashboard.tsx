@@ -12,7 +12,7 @@ import { Pencil, Trash, X } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  const { products, isLoading, updateProduct, deleteProduct } = useProducts();
+  const { products, isLoading, updateProduct, deleteProduct, markAsRented } = useProducts();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<any>({});
   const [saving, setSaving] = useState(false);
@@ -21,6 +21,9 @@ const Dashboard: React.FC = () => {
     if (!user) return [];
     return products.filter(p => p.ownerId && String(p.ownerId) === String(user.id));
   }, [products, user]);
+
+  const mySales = useMemo(() => myProducts.filter((p: any) => p.listingType !== 'rent'), [myProducts]);
+  const myRentals = useMemo(() => myProducts.filter((p: any) => p.listingType === 'rent'), [myProducts]);
 
   const startEdit = (p: any) => {
     setEditingId(p.id);
@@ -76,6 +79,18 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const handleMarkRented = async (id: string) => {
+    const ok = window.confirm('Mark this rental as rented?');
+    if (!ok) return;
+    try {
+      await markAsRented(id);
+      toast.success('Marked as rented');
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err?.message || 'Failed to mark as rented');
+    }
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -114,60 +129,134 @@ const Dashboard: React.FC = () => {
                 <Button onClick={() => window.location.href = '/add-product'}>List a Product</Button>
               </div>
             ) : (
-              <div className="grid gap-4">
-                {myProducts.map((p: any) => (
-                  <div key={p.id} className="rounded-xl border border-border p-4 bg-card flex items-start gap-4">
-                    <img src={p.images?.[0] ?? 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'} alt={p.productName} className="h-24 w-24 object-cover rounded-lg" />
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <h3 className="font-semibold text-lg">{p.productName}</h3>
-                          <div className="text-sm text-muted-foreground">₹{Number(p.price).toLocaleString('en-IN')}</div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-2"><Pencil className="h-4 w-4" /> Edit</Button>
-                          <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-2"><Trash className="h-4 w-4" /> Delete</Button>
-                        </div>
-                      </div>
+              <div className="space-y-6">
+                {/* Sales Section */}
+                {mySales.length > 0 && (
+                  <div>
+                    <h2 className="font-semibold mb-3">Your Sale Listings</h2>
+                    <div className="grid gap-4">
+                      {mySales.map((p: any) => (
+                        <div key={p.id} className="rounded-xl border border-border p-4 bg-card flex items-start gap-4">
+                          <img src={p.images?.[0] ?? 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'} alt={p.productName} className="h-24 w-24 object-cover rounded-lg" />
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between gap-4">
+                              <div>
+                                <h3 className="font-semibold text-lg">{p.productName}</h3>
+                                <div className="text-sm text-muted-foreground">₹{Number(p.price).toLocaleString('en-IN')}</div>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-2"><Pencil className="h-4 w-4" /> Edit</Button>
+                                <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-2"><Trash className="h-4 w-4" /> Delete</Button>
+                              </div>
+                            </div>
 
-                      <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{p.description}</p>
+                            <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{p.description}</p>
 
-                      {/* Inline edit form */}
-                      {editingId === p.id && (
-                        <div className="mt-4 p-3 border border-border rounded-lg bg-background">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                              <Label>Product Name</Label>
-                              <Input value={form.productName} onChange={(e) => handleChange('productName', e.target.value)} />
-                            </div>
-                            <div>
-                              <Label>Price (₹)</Label>
-                              <Input type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)} />
-                            </div>
-                            <div>
-                              <Label>Quantity</Label>
-                              <Input value={form.quantity} onChange={(e) => handleChange('quantity', e.target.value)} />
-                            </div>
-                            <div>
-                              <Label>Address</Label>
-                              <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} />
-                            </div>
+                            {/* Inline edit form */}
+                            {editingId === p.id && (
+                              <div className="mt-4 p-3 border border-border rounded-lg bg-background">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                  <div>
+                                    <Label>Product Name</Label>
+                                    <Input value={form.productName} onChange={(e) => handleChange('productName', e.target.value)} />
+                                  </div>
+                                  <div>
+                                    <Label>Price (₹)</Label>
+                                    <Input type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)} />
+                                  </div>
+                                  <div>
+                                    <Label>Quantity</Label>
+                                    <Input value={form.quantity} onChange={(e) => handleChange('quantity', e.target.value)} />
+                                  </div>
+                                  <div>
+                                    <Label>Address</Label>
+                                    <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} />
+                                  </div>
+                                </div>
+
+                                <div className="mt-3">
+                                  <Label>Description</Label>
+                                  <Textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} />
+                                </div>
+
+                                <div className="mt-3 flex items-center gap-2">
+                                  <Button onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
+                                  <Button variant="ghost" onClick={cancelEdit}><X className="h-4 w-4" /> Cancel</Button>
+                                </div>
+                              </div>
+                            )}
                           </div>
-
-                          <div className="mt-3">
-                            <Label>Description</Label>
-                            <Textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} />
-                          </div>
-
-                          <div className="mt-3 flex items-center gap-2">
-                            <Button onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
-                            <Button variant="ghost" onClick={cancelEdit}><X className="h-4 w-4" /> Cancel</Button>
-                          </div>
                         </div>
-                      )}
+                      ))}
                     </div>
                   </div>
-                ))}
+                )}
+
+                {/* Rentals Section */}
+                {myRentals.length > 0 && (
+                  <div>
+                    <h2 className="font-semibold mb-3">Your Rental Listings</h2>
+                    <div className="grid gap-4">
+                      {myRentals.map((p: any) => (
+                        <div key={p.id} className="rounded-xl border border-border p-4 bg-card flex items-start gap-4">
+                          <img src={p.images?.[0] ?? 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'} alt={p.productName} className="h-24 w-24 object-cover rounded-lg" />
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between gap-4">
+                              <div>
+                                <h3 className="font-semibold text-lg">{p.productName}</h3>
+                                <div className="text-sm text-muted-foreground">{p.rentalType ? `${p.rentalType.charAt(0).toUpperCase() + p.rentalType.slice(1)} • ` : ''}₹{Number(p.rentalPrice).toLocaleString('en-IN')} (rent)</div>
+                              </div>
+                              <div className="flex gap-2 items-center">
+                                <span className={`text-sm px-2 py-1 rounded ${p.rentalStatus === 'available' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}`}>{p.rentalStatus}</span>
+                                {p.rentalStatus === 'available' && (
+                                  <Button size="sm" onClick={() => handleMarkRented(p.id)}>Mark as Rented</Button>
+                                )}
+                                <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-2"><Pencil className="h-4 w-4" /> Edit</Button>
+                                <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-2"><Trash className="h-4 w-4" /> Delete</Button>
+                              </div>
+                            </div>
+
+                            <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{p.description}</p>
+
+                            {/* Inline edit form for rentals */}
+                            {editingId === p.id && (
+                              <div className="mt-4 p-3 border border-border rounded-lg bg-background">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                  <div>
+                                    <Label>Product Name</Label>
+                                    <Input value={form.productName} onChange={(e) => handleChange('productName', e.target.value)} />
+                                  </div>
+                                  <div>
+                                    <Label>Price (₹)</Label>
+                                    <Input type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)} />
+                                  </div>
+                                  <div>
+                                    <Label>Quantity</Label>
+                                    <Input value={form.quantity} onChange={(e) => handleChange('quantity', e.target.value)} />
+                                  </div>
+                                  <div>
+                                    <Label>Address</Label>
+                                    <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} />
+                                  </div>
+                                </div>
+
+                                <div className="mt-3">
+                                  <Label>Description</Label>
+                                  <Textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} />
+                                </div>
+
+                                <div className="mt-3 flex items-center gap-2">
+                                  <Button onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
+                                  <Button variant="ghost" onClick={cancelEdit}><X className="h-4 w-4" /> Cancel</Button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </section>

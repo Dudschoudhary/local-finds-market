@@ -123,6 +123,28 @@ export const useProducts = () => {
     return true;
   };
 
+  // Mark a rental as rented (owner only)
+  const markAsRented = async (id: string) => {
+    const headers: any = { 'Content-Type': 'application/json' };
+    if (user && user.token) headers.Authorization = `Bearer ${user.token}`;
+
+    const res = await fetch(`${API_BASE}/api/products/${encodeURIComponent(id)}/rent`, {
+      method: 'POST',
+      headers,
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => null);
+      throw new Error(err?.message || 'Failed to mark as rented');
+    }
+
+    const updated = await res.json();
+    const updatedDoc = updated && updated.data ? updated.data : updated;
+    const normalized = { ...updatedDoc, id: updatedDoc.id ?? updatedDoc._id };
+    setProducts(prev => prev.map(p => (p.id === normalized.id ? normalized as Product : p)));
+    return normalized as Product;
+  };
+
   return {
     products,
     isLoading,
@@ -133,5 +155,6 @@ export const useProducts = () => {
     getCategoryCounts,
     updateProduct,
     deleteProduct,
+    markAsRented,
   };
 };

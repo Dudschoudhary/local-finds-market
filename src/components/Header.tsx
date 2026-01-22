@@ -100,11 +100,11 @@ const Header = () => {
             </div>
           )}
 
-          <button onClick={handleSell} aria-label="Sell Product">
+          <button onClick={handleSell} aria-label="Add Product">
             <Button className="gap-2">
               <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Sell Product</span>
-              <span className="sm:hidden">Sell</span>
+              <span className="hidden sm:inline"> Product</span>
+              <span className="sm:hidden">Add</span>
             </Button>
           </button>
         </div>

@@ -7,6 +7,7 @@ const {
   updateProduct,
   deleteProduct,
   markAsSold,
+  markAsRented,
 } = require('../controllers/productController');
 const { requireAuth } = require('../middleware/auth');
 
@@ -22,5 +23,7 @@ router.put('/:id', requireAuth, updateProduct);
 router.delete('/:id', requireAuth, deleteProduct);
 // POST /api/products/:id/sell - mark as sold (owner only)
 router.post('/:id/sell', requireAuth, markAsSold);
+// POST /api/products/:id/rent - mark rental as rented (owner only)
+router.post('/:id/rent', requireAuth, markAsRented);
 
 module.exports = router;
