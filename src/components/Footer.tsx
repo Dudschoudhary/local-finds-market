@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Store, Heart } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { categories } from '@/data/categories';
 
 const Footer = () => {
   const { t, getCategoryLabel } = useLanguage();
+
+  // Show first 4 main categories in footer
+  const footerCategories = categories.slice(0, 4);
 
   return (
     <footer className="border-t border-border bg-secondary/30 mt-auto">
@@ -33,10 +37,13 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground mb-4">{t('footer.categoriesTitle')}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/products?category=dairy" className="hover:text-primary transition-colors">{getCategoryLabel('dairy')}</Link></li>
-              <li><Link to="/products?category=honey" className="hover:text-primary transition-colors">{getCategoryLabel('honey')}</Link></li>
-              <li><Link to="/products?category=spices" className="hover:text-primary transition-colors">{getCategoryLabel('spices')}</Link></li>
-              <li><Link to="/products?category=pickles" className="hover:text-primary transition-colors">{getCategoryLabel('pickles')}</Link></li>
+              {footerCategories.map((cat) => (
+                <li key={cat.id}>
+                  <Link to={`/products?category=${cat.id}`} className="hover:text-primary transition-colors">
+                    {cat.icon} {getCategoryLabel(cat.id)}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

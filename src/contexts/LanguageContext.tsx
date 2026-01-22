@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Language, translations, getTranslation } from '@/lib/translations';
+import { getCategoryName } from '@/data/categories';
 
 const STORAGE_KEY = 'localmart_language';
 
@@ -31,6 +32,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const getCategoryLabel = (category: string): string => {
+    // First try the new category system
+    const newCategoryName = getCategoryName(category, language);
+    if (newCategoryName !== category) {
+      return newCategoryName;
+    }
+    
+    // Fallback to old translations for backward compatibility
     const categoryTranslations = translations.categories as Record<string, { en: string; hi: string }>;
     if (categoryTranslations[category]) {
       return categoryTranslations[category][language];

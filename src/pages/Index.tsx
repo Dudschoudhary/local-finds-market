@@ -3,22 +3,15 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import ProductCard from '@/components/ProductCard';
-import CategoryCard from '@/components/CategoryCard';
+import CategoryAccordionMenu from '@/components/CategoryAccordionMenu';
 import { Button } from '@/components/ui/button';
 import { useProducts } from '@/hooks/useProducts';
-import { ProductCategory } from '@/types/product';
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-const categories: ProductCategory[] = [
-  'dairy', 'honey', 'spices', 'pickles', 'grains', 
-  'oils', 'sweets', 'vegetables', 'fruits', 'handicrafts'
-];
-
 const Index = () => {
-  const { products, isLoading, getCategoryCounts } = useProducts();
+  const { products, isLoading } = useProducts();
   const { t } = useLanguage();
-  const categoryCounts = getCategoryCounts();
   const featuredProducts = products.slice(0, 6);
 
   return (
@@ -28,7 +21,7 @@ const Index = () => {
       <main className="flex-1">
         <HeroSection />
 
-        {/* Categories Section */}
+        {/* Categories Section with Accordion Menu */}
         <section className="py-16 bg-secondary/30">
           <div className="container">
             <div className="text-center mb-10">
@@ -40,14 +33,8 @@ const Index = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-              {categories.map((category) => (
-                <CategoryCard 
-                  key={category} 
-                  category={category}
-                  count={categoryCounts[category] || 0}
-                />
-              ))}
+            <div className="max-w-2xl mx-auto">
+              <CategoryAccordionMenu />
             </div>
           </div>
         </section>

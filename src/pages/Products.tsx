@@ -4,23 +4,20 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import { useProducts } from '@/hooks/useProducts';
-import { ProductCategory } from '@/types/product';
+import { categories, getCategoryById, getSubCategoryById } from '@/data/categories';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
 import { Search, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-
-const allCategories: ProductCategory[] = [
-  'dairy', 'honey', 'spices', 'pickles', 'grains', 
-  'oils', 'sweets', 'vegetables', 'fruits', 'handicrafts'
-];
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,13 +25,23 @@ const Products = () => {
   const { t, getCategoryLabel } = useLanguage();
   
   const [searchQuery, setSearchQuery] = useState('');
-  const selectedCategory = searchParams.get('category') as ProductCategory | null;
+  const selectedCategory = searchParams.get('category');
 
   const filteredProducts = useMemo(() => {
     let filtered = products;
 
     if (selectedCategory) {
-      filtered = filtered.filter(p => p.category === selectedCategory);
+      // Check if it's a main category - if so, include all sub-categories
+      const mainCat = getCategoryById(selectedCategory);
+      if (mainCat) {
+        const subCategoryIds = mainCat.subCategories.map(s => s.id);
+        filtered = filtered.filter(p => 
+          p.category === selectedCategory || subCategoryIds.includes(p.category)
+        );
+      } else {
+        // It's a sub-category, filter directly
+        filtered = filtered.filter(p => p.category === selectedCategory);
+      }
     }
 
     if (searchQuery.trim()) {
@@ -97,15 +104,26 @@ const Products = () => {
               value={selectedCategory || 'all'} 
               onValueChange={handleCategoryChange}
             >
-              <SelectTrigger className="w-full sm:w-[200px]">
+              <SelectTrigger className="w-full sm:w-[250px]">
                 <SelectValue placeholder={t('products.allCategories')} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-h-[300px]">
                 <SelectItem value="all">{t('products.allCategories')}</SelectItem>
-                {allCategories.map(cat => (
-                  <SelectItem key={cat} value={cat}>
-                    {getCategoryLabel(cat)}
-                  </SelectItem>
+                {categories.map(cat => (
+                  <SelectGroup key={cat.id}>
+                    <SelectLabel className="flex items-center gap-2 font-semibold text-foreground cursor-pointer">
+                      <span>{cat.icon}</span>
+                      <span>{getCategoryLabel(cat.id)}</span>
+                    </SelectLabel>
+                    <SelectItem value={cat.id} className="pl-6 font-medium">
+                      {cat.icon} {getCategoryLabel(cat.id)} ({t('products.allCategories')})
+                    </SelectItem>
+                    {cat.subCategories.map(sub => (
+                      <SelectItem key={sub.id} value={sub.id} className="pl-8">
+                        {getCategoryLabel(sub.id)}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 ))}
               </SelectContent>
             </Select>

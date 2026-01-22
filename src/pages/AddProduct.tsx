@@ -3,26 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useProducts } from '@/hooks/useProducts';
-import { ProductCategory } from '@/types/product';
+import { categories, getCategoryIcon } from '@/data/categories';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Upload, MapPin, Loader2, Phone, X, ImagePlus } from 'lucide-react';
+import { Upload, MapPin, Loader2, Phone, X, ImagePlus, ChevronDown, ChevronRight, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-
-const allCategories: ProductCategory[] = [
-  'dairy', 'honey', 'spices', 'pickles', 'grains', 
-  'oils', 'sweets', 'vegetables', 'fruits', 'handicrafts'
-];
+import { cn } from '@/lib/utils';
 
 const MAX_IMAGES = 3;
 
@@ -101,6 +90,181 @@ const compressImage = async (file: File, maxBytes = 1024 * 1024): Promise<string
   return dataUrl || originalDataUrl;
 };
 
+// Category Picker Accordion Component
+interface CategoryPickerAccordionProps {
+  selectedCategory: string;
+  onSelect: (categoryId: string) => void;
+}
+
+const CategoryPickerAccordion = ({ selectedCategory, onSelect }: CategoryPickerAccordionProps) => {
+  const { language, getCategoryLabel } = useLanguage();
+  const [isOpen, setIsOpen] = useState(false);
+  const [openMainCategory, setOpenMainCategory] = useState<string | null>(null);
+  const [openSubCategory, setOpenSubCategory] = useState<string | null>(null);
+
+  const handleMainCategoryClick = (categoryId: string) => {
+    if (openMainCategory === categoryId) {
+      setOpenMainCategory(null);
+      setOpenSubCategory(null);
+    } else {
+      setOpenMainCategory(categoryId);
+      setOpenSubCategory(null);
+    }
+  };
+
+  const handleSubCategoryClick = (subId: string, hasSubItems: boolean, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (hasSubItems) {
+      // Toggle sub-category expansion
+      if (openSubCategory === subId) {
+        setOpenSubCategory(null);
+      } else {
+        setOpenSubCategory(subId);
+      }
+    } else {
+      // Select this category
+      onSelect(subId);
+      setIsOpen(false);
+      setOpenMainCategory(null);
+      setOpenSubCategory(null);
+    }
+  };
+
+  const handleNestedItemClick = (itemId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    onSelect(itemId);
+    setIsOpen(false);
+    setOpenMainCategory(null);
+    setOpenSubCategory(null);
+  };
+
+  return (
+    <div className="relative">
+      {/* Selected Value Display / Trigger */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={cn(
+          "w-full flex items-center justify-between px-4 py-3 rounded-lg border bg-card text-left transition-colors",
+          isOpen ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/50"
+        )}
+      >
+        {selectedCategory ? (
+          <span className="flex items-center gap-2">
+            <span>{getCategoryIcon(selectedCategory)}</span>
+            <span className="font-medium">{getCategoryLabel(selectedCategory)}</span>
+          </span>
+        ) : (
+          <span className="text-muted-foreground">Select a category...</span>
+        )}
+        <ChevronDown className={cn(
+          "h-5 w-5 text-muted-foreground transition-transform",
+          isOpen && "rotate-180"
+        )} />
+      </button>
+
+      {/* Dropdown Panel */}
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg max-h-[400px] overflow-y-auto">
+          {categories.map((cat) => (
+            <div key={cat.id} className="border-b border-border/50 last:border-b-0">
+              {/* Main Category */}
+              <button
+                type="button"
+                onClick={() => handleMainCategoryClick(cat.id)}
+                className={cn(
+                  "w-full flex items-center justify-between px-4 py-3 text-left hover:bg-accent/50 transition-colors",
+                  openMainCategory === cat.id && "bg-accent/30"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xl">{cat.icon}</span>
+                  <span className="font-medium">{cat.name[language]}</span>
+                </div>
+                <ChevronDown className={cn(
+                  "h-4 w-4 text-muted-foreground transition-transform",
+                  openMainCategory === cat.id && "rotate-180"
+                )} />
+              </button>
+
+              {/* Sub-categories - Only show when main category is open */}
+              {openMainCategory === cat.id && (
+                <div className="bg-secondary/30">
+                  {cat.subCategories.map((sub) => {
+                    const hasSubItems = sub.subItems && sub.subItems.length > 0;
+                    
+                    return (
+                      <div key={sub.id}>
+                        {/* Sub-category Item */}
+                        <button
+                          type="button"
+                          onClick={(e) => handleSubCategoryClick(sub.id, !!hasSubItems, e)}
+                          className={cn(
+                            "w-full flex items-center justify-between px-6 py-2.5 text-left hover:bg-accent/50 transition-colors",
+                            openSubCategory === sub.id && "bg-accent/30",
+                            selectedCategory === sub.id && "bg-primary/10 text-primary"
+                          )}
+                        >
+                          <span className="text-sm">{sub.name[language]}</span>
+                          <div className="flex items-center gap-2">
+                            {selectedCategory === sub.id && (
+                              <Check className="h-4 w-4 text-primary" />
+                            )}
+                            {hasSubItems && (
+                              <ChevronRight className={cn(
+                                "h-4 w-4 text-muted-foreground transition-transform",
+                                openSubCategory === sub.id && "rotate-90"
+                              )} />
+                            )}
+                          </div>
+                        </button>
+
+                        {/* Nested Items - Only show when sub-category is open */}
+                        {hasSubItems && openSubCategory === sub.id && (
+                          <div className="bg-secondary/50">
+                            {sub.subItems!.map((item) => (
+                              <button
+                                key={item.id}
+                                type="button"
+                                onClick={(e) => handleNestedItemClick(item.id, e)}
+                                className={cn(
+                                  "w-full flex items-center justify-between px-10 py-2 text-left text-sm hover:bg-accent/50 transition-colors",
+                                  selectedCategory === item.id && "bg-primary/10 text-primary"
+                                )}
+                              >
+                                <span>{item.name[language]}</span>
+                                {selectedCategory === item.id && (
+                                  <Check className="h-4 w-4 text-primary" />
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Backdrop to close dropdown */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => {
+            setIsOpen(false);
+            setOpenMainCategory(null);
+            setOpenSubCategory(null);
+          }} 
+        />
+      )}
+    </div>
+  );
+};
+
 const AddProduct = () => {
   const navigate = useNavigate();
   const { addProduct } = useProducts();
@@ -112,7 +276,7 @@ const AddProduct = () => {
     sellerName: '',
     contactNumber: '',
     productName: '',
-    category: '' as ProductCategory | '',
+    category: '' as string | '',
     quantity: '',
     description: '',
     price: '',
@@ -266,7 +430,7 @@ const AddProduct = () => {
         sellerName: formData.sellerName,
         contactNumber: formData.contactNumber,
         productName: formData.productName,
-        category: formData.category as ProductCategory,
+        category: formData.category,
         quantity: formData.quantity,
         images,
         description: formData.description,
@@ -371,24 +535,13 @@ const AddProduct = () => {
               />
             </div>
 
-            {/* Category */}
+            {/* Category - Accordion Style Picker */}
             <div className="space-y-2">
               <Label>{t('addProduct.category')} *</Label>
-              <Select 
-                value={formData.category} 
-                onValueChange={(value) => handleChange('category', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t('addProduct.selectCategory')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {allCategories.map(cat => (
-                    <SelectItem key={cat} value={cat}>
-                      {getCategoryLabel(cat)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <CategoryPickerAccordion 
+                selectedCategory={formData.category}
+                onSelect={(categoryId) => handleChange('category', categoryId)}
+              />
             </div>
 
             {/* Quantity & Price / Rental Price */}
@@ -424,12 +577,7 @@ const AddProduct = () => {
                   </select>
                 </div>
                 {/* For rent show quantity mode toggle as well (Item / Combo) */}
-                {listingType === 'rent' && (
-                  <div className="mt-2 flex gap-2">
-                    <button type="button" onClick={() => setQuantityMode('item')} className={`px-3 py-1 rounded ${quantityMode === 'item' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.item')}</button>
-                    <button type="button" onClick={() => setQuantityMode('combo')} className={`px-3 py-1 rounded ${quantityMode === 'combo' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.combo')}</button>
-                  </div>
-                )}
+                
               </div>
               {listingType === 'sale' ? (
                 <div className="space-y-2">
@@ -481,20 +629,6 @@ const AddProduct = () => {
                 </div>
               )}
             </div>
-
-            {/* If rental, show rental type selector */}
-            {listingType === 'rent' && (
-              <div className="space-y-2">
-                <Label>{t('addProduct.rentalItemType')} *</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button type="button" onClick={() => setRentalType('machine')} className={`px-2 py-1 rounded ${rentalType === 'machine' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.machine')}</button>
-                  <button type="button" onClick={() => setRentalType('vehicle')} className={`px-2 py-1 rounded ${rentalType === 'vehicle' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.vehicle')}</button>
-                  <button type="button" onClick={() => setRentalType('shop')} className={`px-2 py-1 rounded ${rentalType === 'shop' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.shop')}</button>
-                  <button type="button" onClick={() => setRentalType('room')} className={`px-2 py-1 rounded ${rentalType === 'room' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.room')}</button>
-                  <button type="button" onClick={() => setRentalType('other')} className={`px-2 py-1 rounded ${rentalType === 'other' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.other')}</button>
-                </div>
-              </div>
-            )}
 
             {/* Product Images - Multiple Upload */}
             <div className="space-y-2">

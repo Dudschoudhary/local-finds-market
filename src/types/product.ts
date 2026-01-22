@@ -1,9 +1,24 @@
+// Re-export category types and helpers from the centralized categories file
+export { 
+  type ProductCategory, 
+  categoryLabels, 
+  categoryIcons,
+  categories,
+  getCategoryName,
+  getCategoryIcon,
+  getCategoryById,
+  getSubCategoryById,
+  getFlatCategoryList,
+  getGroupedCategories,
+} from '@/data/categories';
+
 export interface Product {
   id: string;
   sellerName: string;
   contactNumber: string;
   productName: string;
-  category: ProductCategory;
+  category: string; // Now supports all main and sub-category IDs
+  subCategory?: string; // Optional sub-category for more specific categorization
   quantity: string;
   images: string[]; // Array of image URLs
   description: string;
@@ -33,41 +48,3 @@ export interface Product {
 }
 
 export type RentalType = 'machine' | 'vehicle' | 'shop' | 'room' | 'other';
-
-export type ProductCategory = 
-  | 'dairy'
-  | 'honey'
-  | 'spices'
-  | 'pickles'
-  | 'grains'
-  | 'oils'
-  | 'sweets'
-  | 'vegetables'
-  | 'fruits'
-  | 'handicrafts';
-
-export const categoryLabels: Record<ProductCategory, string> = {
-  dairy: 'Dairy & Ghee',
-  honey: 'Honey & Natural',
-  spices: 'Spices & Masalas',
-  pickles: 'Pickles & Chutneys',
-  grains: 'Grains & Flour',
-  oils: 'Oils & Fats',
-  sweets: 'Sweets & Snacks',
-  vegetables: 'Fresh Vegetables',
-  fruits: 'Fresh Fruits',
-  handicrafts: 'Handicrafts',
-};
-
-export const categoryIcons: Record<ProductCategory, string> = {
-  dairy: '🥛',
-  honey: '🍯',
-  spices: '🌶️',
-  pickles: '🥒',
-  grains: '🌾',
-  oils: '🫒',
-  sweets: '🍬',
-  vegetables: '🥬',
-  fruits: '🍎',
-  handicrafts: '🎨',
-};
