@@ -8,6 +8,15 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  // Determine price to display based on listing type
+  const displayPrice = product.listingType === 'rent' 
+    ? product.rentalPrice 
+    : product.price;
+  
+  const priceLabel = product.listingType === 'rent' 
+    ? `₹${(displayPrice ?? 0).toLocaleString('en-IN')}/${product.priceUnit || 'day'}` 
+    : `₹${(displayPrice ?? 0).toLocaleString('en-IN')}`;
+
   return (
     <Link to={`/product/${product.id}`} className="block group">
       <article className="card-elevated rounded-xl overflow-hidden bg-card border border-border/50">
@@ -27,6 +36,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
           >
             {categoryLabels[product.category]}
           </Badge>
+          {/* Show Rent badge for rental listings */}
+          {product.listingType === 'rent' && (
+            <Badge className="absolute top-3 right-3 bg-blue-500 text-white border-0">
+              For Rent
+            </Badge>
+          )}
         </div>
         
         <div className="p-4 space-y-3">
@@ -41,10 +56,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
           <div className="flex items-center justify-between">
             <span className="text-xl font-bold text-primary">
-              ₹{product.price.toLocaleString('en-IN')}
+              {priceLabel}
             </span>
             <span className="text-sm text-muted-foreground">
-              {product.quantity}
+              {product.quantity} {product.quantityUnit || ''}
             </span>
           </div>
 

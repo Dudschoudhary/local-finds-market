@@ -212,6 +212,22 @@ const AddProduct = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate required fields with clear messages
+    if (!formData.sellerName.trim()) {
+      toast.error(listingType === 'sale' ? 'Please enter seller name' : 'Please enter rent contact name');
+      return;
+    }
+
+    if (!formData.contactNumber.trim()) {
+      toast.error('Please enter contact number');
+      return;
+    }
+
+    if (!formData.productName.trim()) {
+      toast.error('Please enter product name');
+      return;
+    }
+
     if (!formData.category) {
       toast.error('Please select a category');
       return;

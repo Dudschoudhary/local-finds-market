@@ -227,14 +227,14 @@ const ProductDetail = () => {
                   {product.productName}
                 </h1>
                 <p className="text-3xl font-bold text-primary">
-                  ₹{product.price.toLocaleString('en-IN')}
+                  ₹{product.price != null ? product.price.toLocaleString('en-IN') : '0'}
                 </p>
               </div>
 
               <div className="space-y-3 py-4 border-y border-border">
                 <div className="flex items-center gap-3 text-foreground">
                   <Package className="h-5 w-5 text-muted-foreground" />
-                  <span>Quantity: {product.quantity}</span>
+                  <span>Quantity: {product.quantity ?? 'N/A'}</span>
                 </div>
                 <div className="flex items-center gap-3 text-foreground">
                   <User className="h-5 w-5 text-muted-foreground" />

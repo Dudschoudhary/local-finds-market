@@ -25,6 +25,11 @@ export interface Product {
   rentalType?: RentalType;
   rentalStatus?: 'available' | 'rented';
   rentalPrice?: number;
+
+  // Unit fields
+  quantityUnit?: string;
+  quantityMode?: 'item' | 'combo';
+  priceUnit?: string;
 }
 
 export type RentalType = 'machine' | 'vehicle' | 'shop' | 'room' | 'other';

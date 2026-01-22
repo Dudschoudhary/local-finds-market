@@ -9,9 +9,30 @@ const { errorHandler, notFound } = require('./middleware/errorHandler');
 const app = express();
 
 app.use(cors());
-// Increase body size limits to allow image uploads sent as base64 in JSON (temporary/workaround)
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+// Increase body size limits to allow image uploads sent as base64 in JSON
+app.use(express.json({ 
+  limit: '100mb',
+  verify: (req, res, buf) => {
+    // Store raw body size for debugging
+    req.rawBodySize = buf.length;
+  }
+}));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
+
+// Debug middleware to log request details
+app.use('/api/products', (req, res, next) => {
+  if (req.method === 'POST') {
+    console.log('=== POST /api/products REQUEST ===');
+    console.log('Content-Type:', req.headers['content-type']);
+    console.log('Content-Length:', req.headers['content-length']);
+    console.log('Raw body size:', req.rawBodySize ? `${(req.rawBodySize / 1024 / 1024).toFixed(2)} MB` : 'unknown');
+    console.log('Body parsed:', !!req.body);
+    console.log('Body keys:', req.body ? Object.keys(req.body) : 'NO BODY');
+    console.log('================================');
+  }
+  next();
+});
 
 // Connect to database
 connectDB();

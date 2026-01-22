@@ -63,9 +63,38 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const payload = req.body;
-    // Basic validation: require name and contact
-    if (!payload.productName || !payload.sellerName || !payload.contactNumber) {
-      return res.status(400).json({ message: 'Missing required fields' });
+    
+    // Debug logging
+    console.log('Create product request received');
+    console.log('Content-Type:', req.headers['content-type']);
+    console.log('Body keys:', payload ? Object.keys(payload) : 'NO BODY');
+    
+    // Check if body is empty
+    if (!payload || Object.keys(payload).length === 0) {
+      console.log('ERROR: Request body is empty or not parsed');
+      return res.status(400).json({ 
+        message: 'Request body is empty. Please check Content-Type header and body size.',
+        missingFields: ['entire request body']
+      });
+    }
+    
+    // Check each required field individually
+    const missingFields = [];
+    if (!payload.productName) missingFields.push('productName');
+    if (!payload.sellerName) missingFields.push('sellerName');
+    if (!payload.contactNumber) missingFields.push('contactNumber');
+    
+    if (missingFields.length > 0) {
+      console.log('Validation failed - Missing fields:', missingFields);
+      console.log('Received payload:', { 
+        productName: payload.productName || '(missing)', 
+        sellerName: payload.sellerName || '(missing)', 
+        contactNumber: payload.contactNumber || '(missing)'
+      });
+      return res.status(400).json({ 
+        message: `Missing required fields: ${missingFields.join(', ')}`,
+        missingFields: missingFields
+      });
     }
 
     // Determine listing type (default sale)
