@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Store, Heart } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Footer = () => {
+  const { t, getCategoryLabel } = useLanguage();
+
   return (
     <footer className="border-t border-border bg-secondary/30 mt-auto">
       <div className="container py-12">
@@ -14,44 +17,44 @@ const Footer = () => {
               <span className="font-display text-xl font-semibold">LocalMart</span>
             </Link>
             <p className="text-sm text-muted-foreground">
-              Connecting local sellers with nearby buyers. Fresh, homemade, and authentic products at your fingertips.
+              {t('footer.tagline')}
             </p>
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Quick Links</h4>
+            <h4 className="font-semibold text-foreground mb-4">{t('footer.quickLinks')}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/products" className="hover:text-primary transition-colors">Browse Products</Link></li>
-              <li><Link to="/add-product" className="hover:text-primary transition-colors">Sell Your Product</Link></li>
-              <li><Link to="/" className="hover:text-primary transition-colors">How It Works</Link></li>
+              <li><Link to="/products" className="hover:text-primary transition-colors">{t('footer.browseProducts')}</Link></li>
+              <li><Link to="/add-product" className="hover:text-primary transition-colors">{t('footer.sellYourProduct')}</Link></li>
+              <li><Link to="/" className="hover:text-primary transition-colors">{t('footer.howItWorks')}</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Categories</h4>
+            <h4 className="font-semibold text-foreground mb-4">{t('footer.categoriesTitle')}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/products?category=dairy" className="hover:text-primary transition-colors">Dairy & Ghee</Link></li>
-              <li><Link to="/products?category=honey" className="hover:text-primary transition-colors">Honey & Natural</Link></li>
-              <li><Link to="/products?category=spices" className="hover:text-primary transition-colors">Spices & Masalas</Link></li>
-              <li><Link to="/products?category=pickles" className="hover:text-primary transition-colors">Pickles & Chutneys</Link></li>
+              <li><Link to="/products?category=dairy" className="hover:text-primary transition-colors">{getCategoryLabel('dairy')}</Link></li>
+              <li><Link to="/products?category=honey" className="hover:text-primary transition-colors">{getCategoryLabel('honey')}</Link></li>
+              <li><Link to="/products?category=spices" className="hover:text-primary transition-colors">{getCategoryLabel('spices')}</Link></li>
+              <li><Link to="/products?category=pickles" className="hover:text-primary transition-colors">{getCategoryLabel('pickles')}</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Support</h4>
+            <h4 className="font-semibold text-foreground mb-4">{t('footer.support')}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Contact Us</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">{t('footer.helpCenter')}</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">{t('footer.contactUs')}</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">{t('footer.privacyPolicy')}</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">{t('footer.termsOfService')}</a></li>
             </ul>
           </div>
         </div>
 
         <div className="mt-8 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>© 2024 LocalMart. All rights reserved.</p>
+          <p>{t('footer.copyright')}</p>
           <p className="flex items-center gap-1">
-            Made with <Heart className="h-4 w-4 text-primary fill-primary" /> for local communities
+            {t('footer.madeWith')} <Heart className="h-4 w-4 text-primary fill-primary" /> {t('footer.forCommunities')}
           </p>
         </div>
       </div>

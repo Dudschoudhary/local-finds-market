@@ -1,13 +1,16 @@
 import { Link } from 'react-router-dom';
-import { Product, categoryLabels } from '@/types/product';
+import { Product } from '@/types/product';
 import { MapPin, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const { getCategoryLabel, t } = useLanguage();
+
   // Determine price to display based on listing type
   const displayPrice = product.listingType === 'rent' 
     ? product.rentalPrice 
@@ -34,12 +37,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Badge 
             className="absolute top-3 left-3 bg-accent text-accent-foreground border-0"
           >
-            {categoryLabels[product.category]}
+            {getCategoryLabel(product.category)}
           </Badge>
           {/* Show Rent badge for rental listings */}
           {product.listingType === 'rent' && (
             <Badge className="absolute top-3 right-3 bg-blue-500 text-white border-0">
-              For Rent
+              {t('productCard.forRent')}
             </Badge>
           )}
         </div>

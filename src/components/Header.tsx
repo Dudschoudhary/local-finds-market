@@ -1,13 +1,15 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Plus, Store, MapPin } from 'lucide-react';
+import { Plus, Store, MapPin, Globe } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useState, useRef, useEffect } from 'react';
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { language, setLanguage } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -23,6 +25,10 @@ const Header = () => {
     logout();
     setMenuOpen(false);
     navigate('/');
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'hi' : 'en');
   };
 
   useEffect(() => {
@@ -75,6 +81,17 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-3">
+          {/* Language Toggle */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={toggleLanguage}
+            className="gap-1 text-xs font-medium"
+          >
+            <Globe className="h-4 w-4" />
+            {language === 'en' ? 'हिंदी' : 'EN'}
+          </Button>
+
           {/* If not authenticated, show Login button */}
           {!user && (
             <Button variant="ghost" onClick={() => navigate('/auth?next=' + encodeURIComponent(location.pathname))}>

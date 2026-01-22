@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ProductCategory, categoryLabels, categoryIcons } from '@/types/product';
+import { ProductCategory, categoryIcons } from '@/types/product';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface CategoryCardProps {
   category: ProductCategory;
@@ -7,6 +8,8 @@ interface CategoryCardProps {
 }
 
 const CategoryCard = ({ category, count }: CategoryCardProps) => {
+  const { getCategoryLabel, t } = useLanguage();
+
   return (
     <Link 
       to={`/products?category=${category}`}
@@ -16,11 +19,11 @@ const CategoryCard = ({ category, count }: CategoryCardProps) => {
         {categoryIcons[category]}
       </span>
       <span className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">
-        {categoryLabels[category]}
+        {getCategoryLabel(category)}
       </span>
       {count !== undefined && (
         <span className="text-xs text-muted-foreground mt-1">
-          {count} products
+          {count} {t('products.productsFound').split(' ')[0]}
         </span>
       )}
     </Link>

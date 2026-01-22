@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useProducts } from '@/hooks/useProducts';
-import { categoryLabels, categoryIcons } from '@/types/product';
+import { categoryIcons } from '@/types/product';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -19,11 +19,13 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { getProductById, isLoading } = useProducts();
+  const { t, getCategoryLabel } = useLanguage();
   const product = id ? getProductById(id) : undefined;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -33,11 +35,11 @@ const ProductDetail = () => {
 
   const requestViewerLocationAndDirections = () => {
     if (!product || !product.location) {
-      toast.error('Product location not available');
+      toast.error(t('toasts.locationError'));
       return;
     }
     if (!navigator.geolocation) {
-      toast.error('Geolocation not supported by your browser');
+      toast.error(t('toasts.geoNotSupported'));
       return;
     }
 
@@ -56,7 +58,7 @@ const ProductDetail = () => {
       },
       (err) => {
         console.error('Geolocation error', err);
-        toast.error('Unable to retrieve your location');
+        toast.error(t('toasts.locationError'));
         setLocating(false);
       },
       { enableHighAccuracy: true, timeout: 15000 }
@@ -129,12 +131,12 @@ const ProductDetail = () => {
         <Header />
         <main className="flex-1 container py-16 text-center">
           <p className="text-6xl mb-4">🔍</p>
-          <h1 className="font-display text-2xl font-bold mb-4">Product Not Found</h1>
+          <h1 className="font-display text-2xl font-bold mb-4">{t('productDetail.productNotFound')}</h1>
           <p className="text-muted-foreground mb-6">
-            The product you're looking for doesn't exist or has been removed.
+            {t('products.tryDifferent')}
           </p>
           <Button onClick={() => navigate('/products')}>
-            Browse Products
+            {t('hero.browseProducts')}
           </Button>
         </main>
         <Footer />
@@ -155,7 +157,7 @@ const ProductDetail = () => {
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="h-4 w-4" />
-            Back
+            {t('productDetail.backToProducts')}
           </Button>
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
@@ -221,7 +223,7 @@ const ProductDetail = () => {
             <div className="space-y-6">
               <div>
                 <Badge className="bg-accent text-accent-foreground mb-3">
-                  {categoryIcons[product.category]} {categoryLabels[product.category]}
+                  {categoryIcons[product.category]} {getCategoryLabel(product.category)}
                 </Badge>
                 <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
                   {product.productName}
@@ -234,11 +236,11 @@ const ProductDetail = () => {
               <div className="space-y-3 py-4 border-y border-border">
                 <div className="flex items-center gap-3 text-foreground">
                   <Package className="h-5 w-5 text-muted-foreground" />
-                  <span>Quantity: {product.quantity ?? 'N/A'}</span>
+                  <span>{t('addProduct.quantity')}: {product.quantity ?? 'N/A'}</span>
                 </div>
                 <div className="flex items-center gap-3 text-foreground">
                   <User className="h-5 w-5 text-muted-foreground" />
-                  <span>Seller: {product.sellerName}</span>
+                  <span>{t('productDetail.seller')}: {product.sellerName}</span>
                 </div>
                 {product.contactNumber && (
                   <div className="flex items-center gap-3 text-foreground">
@@ -254,7 +256,7 @@ const ProductDetail = () => {
                 </div>
                 <div className="flex items-center gap-3 text-foreground">
                   <Calendar className="h-5 w-5 text-muted-foreground" />
-                  <span>Listed on {new Date(product.createdAt).toLocaleDateString('en-IN', {
+                  <span>{t('productDetail.listedOn')} {new Date(product.createdAt).toLocaleDateString('en-IN', {
                     day: 'numeric',
                     month: 'long',
                     year: 'numeric'
@@ -263,7 +265,7 @@ const ProductDetail = () => {
               </div>
 
               <div>
-                <h3 className="font-semibold text-foreground mb-2">Description</h3>
+                <h3 className="font-semibold text-foreground mb-2">{t('addProduct.description')}</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   {product.description}
                 </p>
@@ -285,7 +287,7 @@ const ProductDetail = () => {
                         Open in Maps
                       </Button>
                       <Button size="sm" onClick={requestViewerLocationAndDirections} disabled={locating}>
-                        {locating ? 'Locating…' : 'Get Directions'}
+                        {locating ? t('addProduct.locating') : t('productDetail.getDirections')}
                       </Button>
                     </div>
                   </div>
@@ -320,11 +322,11 @@ const ProductDetail = () => {
               <div className="flex gap-3">
                 <Button className="flex-1 gap-2" size="lg" onClick={handleCall}>
                   <Phone className="h-5 w-5" />
-                  Call Seller
+                  {t('productDetail.callSeller')}
                 </Button>
                 <Button className="flex-1 gap-2 bg-green-600 hover:bg-green-700" size="lg" onClick={handleWhatsApp}>
                   <MessageCircle className="h-5 w-5" />
-                  WhatsApp
+                  {t('productDetail.whatsapp')}
                 </Button>
                 <Button variant="outline" size="lg" onClick={handleShare}>
                   <Share2 className="h-5 w-5" />

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useProducts } from '@/hooks/useProducts';
-import { ProductCategory, categoryLabels } from '@/types/product';
+import { ProductCategory } from '@/types/product';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { Upload, MapPin, Loader2, Phone, X, ImagePlus } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const allCategories: ProductCategory[] = [
   'dairy', 'honey', 'spices', 'pickles', 'grains', 
@@ -103,6 +104,7 @@ const compressImage = async (file: File, maxBytes = 1024 * 1024): Promise<string
 const AddProduct = () => {
   const navigate = useNavigate();
   const { addProduct } = useProducts();
+  const { t, getCategoryLabel } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
@@ -132,7 +134,7 @@ const AddProduct = () => {
 
   const requestLocation = () => {
     if (!navigator.geolocation) {
-      return toast.error('Geolocation is not supported by your browser');
+      return toast.error(t('toasts.geoNotSupported'));
     }
 
     setLocating(true);
@@ -141,12 +143,12 @@ const AddProduct = () => {
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
         setLocation({ lat, lng });
-        toast.success('Location captured');
+        toast.success(t('toasts.locationCaptured'));
         setLocating(false);
       },
       (err) => {
         console.error('Geolocation error', err);
-        toast.error('Unable to retrieve location');
+        toast.error(t('toasts.locationError'));
         setLocating(false);
       },
       { enableHighAccuracy: true, timeout: 15000 }
@@ -162,14 +164,14 @@ const AddProduct = () => {
 
     const filesArr = Array.from(files);
     if (filesArr.length > remainingSlots) {
-      toast.warning(`You can only upload ${MAX_IMAGES} images. Only first ${remainingSlots} will be added.`);
+      toast.warning(`${t('toasts.maxImages')} ${MAX_IMAGES} ${t('toasts.imagesWillBeAdded')} ${remainingSlots} ${t('toasts.willBeAdded')}`);
     }
 
     for (const file of filesArr.slice(0, remainingSlots)) {
       try {
         // Enforce image file type
         if (!file.type.startsWith('image/')) {
-          toast.error('Only image files are allowed');
+          toast.error(t('toasts.onlyImages'));
           continue;
         }
 
@@ -179,11 +181,11 @@ const AddProduct = () => {
         if (file.size <= MAX_BYTES) {
           dataUrl = await readFileAsDataURL(file);
         } else {
-          toast('Large image detected — compressing...', { icon: '⚙️' });
+          toast(t('toasts.largeImage'), { icon: '⚙️' });
           dataUrl = await compressImage(file, MAX_BYTES);
           const blob = dataURLToBlob(dataUrl);
           if (blob.size > MAX_BYTES) {
-            toast.error('Unable to compress image under 1MB; please choose a smaller image');
+            toast.error(t('toasts.compressError'));
             continue;
           }
         }
@@ -192,13 +194,13 @@ const AddProduct = () => {
         added++;
       } catch (err) {
         console.error('Error processing image', err);
-        toast.error('Failed to process one of the images');
+        toast.error(t('toasts.imageProcessError'));
       }
     }
 
     if (added === 0 && filesArr.length > 0) {
       // if nothing added, provide guidance
-      toast.error('No images were added. Each image must be an image file and under 1MB (will be compressed automatically).');
+      toast.error(t('toasts.onlyImages'));
     }
 
     // Reset input so same file can be selected again
@@ -214,40 +216,40 @@ const AddProduct = () => {
     
     // Validate required fields with clear messages
     if (!formData.sellerName.trim()) {
-      toast.error(listingType === 'sale' ? 'Please enter seller name' : 'Please enter rent contact name');
+      toast.error(listingType === 'sale' ? t('toasts.enterSellerName') : t('toasts.enterRentName'));
       return;
     }
 
     if (!formData.contactNumber.trim()) {
-      toast.error('Please enter contact number');
+      toast.error(t('toasts.enterContact'));
       return;
     }
 
     if (!formData.productName.trim()) {
-      toast.error('Please enter product name');
+      toast.error(t('toasts.enterProductName'));
       return;
     }
 
     if (!formData.category) {
-      toast.error('Please select a category');
+      toast.error(t('toasts.selectCategory'));
       return;
     }
 
     // Require a captured location
     if (location.lat === null || location.lng === null) {
-      toast.error('Please capture your live location using the "Use GPS" button');
+      toast.error(t('toasts.captureLocation'));
       return;
     }
 
     // Validate based on listing type
     if (listingType === 'sale') {
       if (!formData.price) {
-        toast.error('Please enter a price for sale listings');
+        toast.error(t('toasts.enterPrice'));
         return;
       }
     } else {
       if (!rentalPrice) {
-        toast.error('Please enter a rental price for rent listings');
+        toast.error(t('toasts.enterRentalPrice'));
         return;
       }
     }
@@ -286,8 +288,8 @@ const AddProduct = () => {
 
       await addProduct(payload);
 
-      toast.success('Product listed successfully!', {
-        description: 'Your product is now visible to buyers.',
+      toast.success(t('toasts.productListed'), {
+        description: t('toasts.productVisible'),
       });
 
       navigate('/products');
@@ -310,10 +312,10 @@ const AddProduct = () => {
         <div className="container max-w-2xl">
           <div className="mb-8">
             <h1 className="font-display text-3xl font-bold text-foreground mb-2">
-              List Your Product
+              {t('addProduct.title')}
             </h1>
             <p className="text-muted-foreground">
-              Fill in the details below to start selling or renting your product
+              {t('addProduct.subtitle')}
             </p>
           </div>
 
@@ -321,19 +323,19 @@ const AddProduct = () => {
             {/* Top toggles: Sell / Rent */}
             <div className="flex gap-3">
               <button type="button" onClick={() => setListingType('sale')} className={`px-3 py-1 rounded ${listingType === 'sale' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>
-                Sell
+                {t('addProduct.sell')}
               </button>
               <button type="button" onClick={() => setListingType('rent')} className={`px-3 py-1 rounded ${listingType === 'rent' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>
-                Rent
+                {t('addProduct.rent')}
               </button>
             </div>
 
             {/* Seller / Rent Name */}
             <div className="space-y-2">
-              <Label htmlFor="sellerName">{listingType === 'sale' ? 'Seller Name *' : 'Rent Name *'}</Label>
+              <Label htmlFor="sellerName">{listingType === 'sale' ? t('addProduct.sellerName') : t('addProduct.rentName')} *</Label>
               <Input
                 id="sellerName"
-                placeholder={listingType === 'sale' ? 'Enter seller name or business' : 'Enter contact name for rental'}
+                placeholder={listingType === 'sale' ? t('addProduct.enterSellerName') : t('addProduct.enterRentName')}
                 value={formData.sellerName}
                 onChange={(e) => handleChange('sellerName', e.target.value)}
                 required
@@ -342,7 +344,7 @@ const AddProduct = () => {
 
             {/* Contact Number (required) */}
             <div className="space-y-2">
-              <Label htmlFor="contactNumber">Contact Number *</Label>
+              <Label htmlFor="contactNumber">{t('addProduct.contactNumber')} *</Label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -359,10 +361,10 @@ const AddProduct = () => {
 
             {/* Product Name */}
             <div className="space-y-2">
-              <Label htmlFor="productName">Product Name *</Label>
+              <Label htmlFor="productName">{t('addProduct.productName')} *</Label>
               <Input
                 id="productName"
-                placeholder="e.g., Pure Desi Cow Ghee"
+                placeholder={t('addProduct.productNamePlaceholder')}
                 value={formData.productName}
                 onChange={(e) => handleChange('productName', e.target.value)}
                 required
@@ -371,18 +373,18 @@ const AddProduct = () => {
 
             {/* Category */}
             <div className="space-y-2">
-              <Label>Category *</Label>
+              <Label>{t('addProduct.category')} *</Label>
               <Select 
                 value={formData.category} 
                 onValueChange={(value) => handleChange('category', value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue placeholder={t('addProduct.selectCategory')} />
                 </SelectTrigger>
                 <SelectContent>
                   {allCategories.map(cat => (
                     <SelectItem key={cat} value={cat}>
-                      {categoryLabels[cat]}
+                      {getCategoryLabel(cat)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -392,7 +394,7 @@ const AddProduct = () => {
             {/* Quantity & Price / Rental Price */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="quantity">Quantity *</Label>
+                <Label htmlFor="quantity">{t('addProduct.quantity')} *</Label>
                 <div className="flex items-center gap-2">
                   <Input
                     id="quantity"
@@ -405,18 +407,18 @@ const AddProduct = () => {
                   <select value={quantityUnit} onChange={(e) => setQuantityUnit(e.target.value)} className="px-2 py-1 rounded border">
                     {listingType === 'sale' ? (
                       <>
-                        <option value="kg">kg</option>
-                        <option value="gm">gm</option>
-                        <option value="liter">liter</option>
-                        <option value="quintal">quintal</option>
-                        <option value="dhara">dhara</option>
-                        <option value="man">man</option>
-                        <option value="piece">piece</option>
+                        <option value="kg">{t('units.kg')}</option>
+                        <option value="gm">{t('units.gm')}</option>
+                        <option value="liter">{t('units.liter')}</option>
+                        <option value="quintal">{t('units.quintal')}</option>
+                        <option value="dhara">{t('units.dhara')}</option>
+                        <option value="man">{t('units.man')}</option>
+                        <option value="piece">{t('units.piece')}</option>
                       </>
                     ) : (
                       <>
-                        <option value="piece">Item</option>
-                        <option value="combo">Combo</option>
+                        <option value="piece">{t('addProduct.item')}</option>
+                        <option value="combo">{t('addProduct.combo')}</option>
                       </>
                     )}
                   </select>
@@ -424,14 +426,14 @@ const AddProduct = () => {
                 {/* For rent show quantity mode toggle as well (Item / Combo) */}
                 {listingType === 'rent' && (
                   <div className="mt-2 flex gap-2">
-                    <button type="button" onClick={() => setQuantityMode('item')} className={`px-3 py-1 rounded ${quantityMode === 'item' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Item</button>
-                    <button type="button" onClick={() => setQuantityMode('combo')} className={`px-3 py-1 rounded ${quantityMode === 'combo' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Combo</button>
+                    <button type="button" onClick={() => setQuantityMode('item')} className={`px-3 py-1 rounded ${quantityMode === 'item' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.item')}</button>
+                    <button type="button" onClick={() => setQuantityMode('combo')} className={`px-3 py-1 rounded ${quantityMode === 'combo' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.combo')}</button>
                   </div>
                 )}
               </div>
               {listingType === 'sale' ? (
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price (₹) *</Label>
+                  <Label htmlFor="price">{t('addProduct.price')} *</Label>
                   <div className="flex items-center gap-2">
                     <Input
                       id="price"
@@ -444,19 +446,19 @@ const AddProduct = () => {
                       required
                     />
                     <select value={priceUnit} onChange={(e) => setPriceUnit(e.target.value)} className="px-2 py-1 rounded border">
-                      <option value="per kg">per kg</option>
-                      <option value="per gm">per gm</option>
-                      <option value="per liter">per liter</option>
-                      <option value="per quintal">per quintal</option>
-                      <option value="per dhara">per dhara</option>
-                      <option value="per man">per man</option>
-                      <option value="per piece">per piece</option>
+                      <option value="per kg">{t('units.perKg')}</option>
+                      <option value="per gm">{t('units.perGm')}</option>
+                      <option value="per liter">{t('units.perLiter')}</option>
+                      <option value="per quintal">{t('units.perQuintal')}</option>
+                      <option value="per dhara">{t('units.perDhara')}</option>
+                      <option value="per man">{t('units.perMan')}</option>
+                      <option value="per piece">{t('units.perPiece')}</option>
                     </select>
                   </div>
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <Label htmlFor="rentalPrice">Rental Price (₹) *</Label>
+                  <Label htmlFor="rentalPrice">{t('addProduct.rentalPrice')} *</Label>
                   <div className="flex items-center gap-2">
                     <Input
                       id="rentalPrice"
@@ -469,11 +471,11 @@ const AddProduct = () => {
                       required
                     />
                     <select value={priceUnit} onChange={(e) => setPriceUnit(e.target.value)} className="px-2 py-1 rounded border">
-                      <option value="per piece">per piece</option>
-                      <option value="combo">combo</option>
-                      <option value="per km">per km</option>
-                      <option value="per day">per day</option>
-                      <option value="per month">per month</option>
+                      <option value="per piece">{t('units.perPiece')}</option>
+                      <option value="combo">{t('addProduct.combo')}</option>
+                      <option value="per km">{t('units.perKm')}</option>
+                      <option value="per day">{t('units.perDay')}</option>
+                      <option value="per month">{t('units.perMonth')}</option>
                     </select>
                   </div>
                 </div>
@@ -483,20 +485,20 @@ const AddProduct = () => {
             {/* If rental, show rental type selector */}
             {listingType === 'rent' && (
               <div className="space-y-2">
-                <Label>Rental Item Type *</Label>
+                <Label>{t('addProduct.rentalItemType')} *</Label>
                 <div className="grid grid-cols-2 gap-2">
-                  <button type="button" onClick={() => setRentalType('machine')} className={`px-2 py-1 rounded ${rentalType === 'machine' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Machine</button>
-                  <button type="button" onClick={() => setRentalType('vehicle')} className={`px-2 py-1 rounded ${rentalType === 'vehicle' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Vehicle</button>
-                  <button type="button" onClick={() => setRentalType('shop')} className={`px-2 py-1 rounded ${rentalType === 'shop' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Shop</button>
-                  <button type="button" onClick={() => setRentalType('room')} className={`px-2 py-1 rounded ${rentalType === 'room' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Room</button>
-                  <button type="button" onClick={() => setRentalType('other')} className={`px-2 py-1 rounded ${rentalType === 'other' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>Other</button>
+                  <button type="button" onClick={() => setRentalType('machine')} className={`px-2 py-1 rounded ${rentalType === 'machine' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.machine')}</button>
+                  <button type="button" onClick={() => setRentalType('vehicle')} className={`px-2 py-1 rounded ${rentalType === 'vehicle' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.vehicle')}</button>
+                  <button type="button" onClick={() => setRentalType('shop')} className={`px-2 py-1 rounded ${rentalType === 'shop' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.shop')}</button>
+                  <button type="button" onClick={() => setRentalType('room')} className={`px-2 py-1 rounded ${rentalType === 'room' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.room')}</button>
+                  <button type="button" onClick={() => setRentalType('other')} className={`px-2 py-1 rounded ${rentalType === 'other' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>{t('addProduct.other')}</button>
                 </div>
               </div>
             )}
 
             {/* Product Images - Multiple Upload */}
             <div className="space-y-2">
-              <Label>Product Images (up to {MAX_IMAGES})</Label>
+              <Label>{t('addProduct.productImages')} ({t('addProduct.upTo')} {MAX_IMAGES})</Label>
               
               {/* Image Previews Grid */}
               {imagePreviews.length > 0 && (
@@ -517,7 +519,7 @@ const AddProduct = () => {
                       </button>
                       {index === 0 && (
                         <span className="absolute bottom-1 left-1 bg-primary text-primary-foreground text-xs px-1.5 py-0.5 rounded">
-                          Main
+                          {t('addProduct.main')}
                         </span>
                       )}
                     </div>
@@ -536,11 +538,11 @@ const AddProduct = () => {
                     )}
                     <p className="text-sm text-muted-foreground mb-1">
                       {imagePreviews.length === 0 
-                        ? 'Click to upload product images' 
-                        : `Add more images (${MAX_IMAGES - imagePreviews.length} remaining)`}
+                        ? t('addProduct.clickToUpload') 
+                        : `${t('addProduct.addMoreImages')} (${MAX_IMAGES - imagePreviews.length} ${t('addProduct.remaining')})`}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      PNG, JPG up to 1MB each
+                      {t('addProduct.imageSize')}
                     </p>
                     <input
                       type="file"
@@ -556,10 +558,10 @@ const AddProduct = () => {
 
             {/* Description */}
             <div className="space-y-2">
-              <Label htmlFor="description">Description *</Label>
+              <Label htmlFor="description">{t('addProduct.description')} *</Label>
               <Textarea
                 id="description"
-                placeholder="Describe your product, its quality, how it's made, etc."
+                placeholder={t('addProduct.descriptionPlaceholder')}
                 rows={4}
                 value={formData.description}
                 onChange={(e) => handleChange('description', e.target.value)}
@@ -569,11 +571,11 @@ const AddProduct = () => {
 
             {/* Address */}
             <div className="space-y-2">
-              <Label htmlFor="address">Address / Location *</Label>
+              <Label htmlFor="address">{t('addProduct.address')} *</Label>
               <div className="relative">
                 <Input
                   id="address"
-                  placeholder="e.g., Anand, Gujarat"
+                  placeholder={t('addProduct.addressPlaceholder')}
                   value={formData.address}
                   onChange={(e) => handleChange('address', e.target.value)}
                   required
@@ -586,11 +588,11 @@ const AddProduct = () => {
                   onClick={requestLocation}
                 >
                   <MapPin className="h-3.5 w-3.5" />
-                  {locating ? 'Locating…' : 'Use GPS'}
+                  {locating ? t('addProduct.locating') : t('addProduct.useGPS')}
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Capture your live GPS location. This will be saved with the product.
+                {t('addProduct.gpsNote')}
               </p>
 
               {/* Map preview (if location captured) */}
@@ -605,7 +607,7 @@ const AddProduct = () => {
                       </div>
                     </div>
                     <Button size="sm" variant="ghost" onClick={() => setLocation({ lat: null, lng: null })}>
-                      Clear
+                      {t('addProduct.clear')}
                     </Button>
                   </div>
                   <div className="aspect-video">
@@ -630,10 +632,10 @@ const AddProduct = () => {
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Listing Product...
+                  {t('addProduct.listingProduct')}
                 </>
               ) : (
-                'List Product'
+                t('addProduct.listProduct')
               )}
             </Button>
           </form>

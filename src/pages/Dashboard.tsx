@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProducts } from '@/hooks/useProducts';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,6 +14,7 @@ import { Pencil, Trash, X } from 'lucide-react';
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const { products, isLoading, updateProduct, deleteProduct, markAsRented } = useProducts();
+  const { t } = useLanguage();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<any>({});
   const [saving, setSaving] = useState(false);
@@ -57,11 +59,11 @@ const Dashboard: React.FC = () => {
         address: form.address,
       };
       await updateProduct(editingId, updates);
-      toast.success('Product updated');
+      toast.success(t('common.success'));
       cancelEdit();
     } catch (err: any) {
       console.error(err);
-      toast.error(err?.message || 'Failed to update product');
+      toast.error(err?.message || t('common.error'));
     } finally {
       setSaving(false);
     }
@@ -72,10 +74,10 @@ const Dashboard: React.FC = () => {
     if (!ok) return;
     try {
       await deleteProduct(id);
-      toast.success('Product deleted');
+      toast.success(t('common.success'));
     } catch (err: any) {
       console.error(err);
-      toast.error(err?.message || 'Failed to delete product');
+      toast.error(err?.message || t('common.error'));
     }
   };
 
@@ -84,10 +86,10 @@ const Dashboard: React.FC = () => {
     if (!ok) return;
     try {
       await markAsRented(id);
-      toast.success('Marked as rented');
+      toast.success(t('common.success'));
     } catch (err: any) {
       console.error(err);
-      toast.error(err?.message || 'Failed to mark as rented');
+      toast.error(err?.message || t('common.error'));
     }
   };
 
@@ -97,8 +99,8 @@ const Dashboard: React.FC = () => {
         <Header />
         <main className="flex-1 py-8">
           <div className="container text-center py-20">
-            <h2 className="text-xl font-semibold mb-4">Please sign in to view your dashboard</h2>
-            <Button onClick={() => window.location.href = '/auth?next=/dashboard'}>Go to Login</Button>
+            <h2 className="text-xl font-semibold mb-4">{t('auth.login')}</h2>
+            <Button onClick={() => window.location.href = '/auth?next=/dashboard'}>{t('auth.login')}</Button>
           </div>
         </main>
         <Footer />
@@ -112,8 +114,8 @@ const Dashboard: React.FC = () => {
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
           <div className="mb-6 flex items-center justify-between">
-            <h1 className="font-display text-2xl font-bold">Dashboard</h1>
-            <div className="text-sm text-muted-foreground">Signed in as {user.name ?? user.contactNumber}</div>
+            <h1 className="font-display text-2xl font-bold">{t('dashboard.title')}</h1>
+            <div className="text-sm text-muted-foreground">{user.name ?? user.contactNumber}</div>
           </div>
 
           <section className="space-y-4">
@@ -125,15 +127,15 @@ const Dashboard: React.FC = () => {
               </div>
             ) : myProducts.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-lg mb-2">You have no products listed yet.</p>
-                <Button onClick={() => window.location.href = '/add-product'}>List a Product</Button>
+                <p className="text-lg mb-2">{t('dashboard.noListings')}</p>
+                <Button onClick={() => window.location.href = '/add-product'}>{t('dashboard.addFirst')}</Button>
               </div>
             ) : (
               <div className="space-y-6">
                 {/* Sales Section */}
                 {mySales.length > 0 && (
                   <div>
-                    <h2 className="font-semibold mb-3">Your Sale Listings</h2>
+                    <h2 className="font-semibold mb-3">{t('dashboard.myListings')}</h2>
                     <div className="grid gap-4">
                       {mySales.map((p: any) => (
                         <div key={p.id} className="rounded-xl border border-border p-4 bg-card flex items-start gap-4">
@@ -145,8 +147,8 @@ const Dashboard: React.FC = () => {
                                 <div className="text-sm text-muted-foreground">₹{Number(p.price).toLocaleString('en-IN')}</div>
                               </div>
                               <div className="flex gap-2">
-                                <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-2"><Pencil className="h-4 w-4" /> Edit</Button>
-                                <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-2"><Trash className="h-4 w-4" /> Delete</Button>
+                                <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-2"><Pencil className="h-4 w-4" /> {t('dashboard.edit')}</Button>
+                                <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-2"><Trash className="h-4 w-4" /> {t('dashboard.delete')}</Button>
                               </div>
                             </div>
 
@@ -157,31 +159,31 @@ const Dashboard: React.FC = () => {
                               <div className="mt-4 p-3 border border-border rounded-lg bg-background">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                   <div>
-                                    <Label>Product Name</Label>
+                                    <Label>{t('addProduct.productName')}</Label>
                                     <Input value={form.productName} onChange={(e) => handleChange('productName', e.target.value)} />
                                   </div>
                                   <div>
-                                    <Label>Price (₹)</Label>
+                                    <Label>{t('addProduct.price')}</Label>
                                     <Input type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)} />
                                   </div>
                                   <div>
-                                    <Label>Quantity</Label>
+                                    <Label>{t('addProduct.quantity')}</Label>
                                     <Input value={form.quantity} onChange={(e) => handleChange('quantity', e.target.value)} />
                                   </div>
                                   <div>
-                                    <Label>Address</Label>
+                                    <Label>{t('addProduct.address')}</Label>
                                     <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} />
                                   </div>
                                 </div>
 
                                 <div className="mt-3">
-                                  <Label>Description</Label>
+                                  <Label>{t('addProduct.description')}</Label>
                                   <Textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} />
                                 </div>
 
                                 <div className="mt-3 flex items-center gap-2">
-                                  <Button onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
-                                  <Button variant="ghost" onClick={cancelEdit}><X className="h-4 w-4" /> Cancel</Button>
+                                  <Button onClick={handleSave} disabled={saving}>{saving ? t('common.loading') : t('common.success')}</Button>
+                                  <Button variant="ghost" onClick={cancelEdit}><X className="h-4 w-4" /></Button>
                                 </div>
                               </div>
                             )}
@@ -195,7 +197,7 @@ const Dashboard: React.FC = () => {
                 {/* Rentals Section */}
                 {myRentals.length > 0 && (
                   <div>
-                    <h2 className="font-semibold mb-3">Your Rental Listings</h2>
+                    <h2 className="font-semibold mb-3">{t('addProduct.rent')}</h2>
                     <div className="grid gap-4">
                       {myRentals.map((p: any) => (
                         <div key={p.id} className="rounded-xl border border-border p-4 bg-card flex items-start gap-4">
@@ -204,15 +206,15 @@ const Dashboard: React.FC = () => {
                             <div className="flex items-start justify-between gap-4">
                               <div>
                                 <h3 className="font-semibold text-lg">{p.productName}</h3>
-                                <div className="text-sm text-muted-foreground">{p.rentalType ? `${p.rentalType.charAt(0).toUpperCase() + p.rentalType.slice(1)} • ` : ''}₹{Number(p.rentalPrice).toLocaleString('en-IN')} (rent)</div>
+                                <div className="text-sm text-muted-foreground">{p.rentalType ? `${p.rentalType.charAt(0).toUpperCase() + p.rentalType.slice(1)} • ` : ''}₹{Number(p.rentalPrice).toLocaleString('en-IN')} ({t('addProduct.rent')})</div>
                               </div>
                               <div className="flex gap-2 items-center">
-                                <span className={`text-sm px-2 py-1 rounded ${p.rentalStatus === 'available' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}`}>{p.rentalStatus}</span>
+                                <span className={`text-sm px-2 py-1 rounded ${p.rentalStatus === 'available' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}`}>{p.rentalStatus === 'available' ? t('productCard.available') : t('productCard.rented')}</span>
                                 {p.rentalStatus === 'available' && (
-                                  <Button size="sm" onClick={() => handleMarkRented(p.id)}>Mark as Rented</Button>
+                                  <Button size="sm" onClick={() => handleMarkRented(p.id)}>{t('dashboard.markAsSold')}</Button>
                                 )}
-                                <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-2"><Pencil className="h-4 w-4" /> Edit</Button>
-                                <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-2"><Trash className="h-4 w-4" /> Delete</Button>
+                                <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-2"><Pencil className="h-4 w-4" /> {t('dashboard.edit')}</Button>
+                                <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-2"><Trash className="h-4 w-4" /> {t('dashboard.delete')}</Button>
                               </div>
                             </div>
 
@@ -223,31 +225,31 @@ const Dashboard: React.FC = () => {
                               <div className="mt-4 p-3 border border-border rounded-lg bg-background">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                   <div>
-                                    <Label>Product Name</Label>
+                                    <Label>{t('addProduct.productName')}</Label>
                                     <Input value={form.productName} onChange={(e) => handleChange('productName', e.target.value)} />
                                   </div>
                                   <div>
-                                    <Label>Price (₹)</Label>
+                                    <Label>{t('addProduct.price')}</Label>
                                     <Input type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)} />
                                   </div>
                                   <div>
-                                    <Label>Quantity</Label>
+                                    <Label>{t('addProduct.quantity')}</Label>
                                     <Input value={form.quantity} onChange={(e) => handleChange('quantity', e.target.value)} />
                                   </div>
                                   <div>
-                                    <Label>Address</Label>
+                                    <Label>{t('addProduct.address')}</Label>
                                     <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} />
                                   </div>
                                 </div>
 
                                 <div className="mt-3">
-                                  <Label>Description</Label>
+                                  <Label>{t('addProduct.description')}</Label>
                                   <Textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} />
                                 </div>
 
                                 <div className="mt-3 flex items-center gap-2">
-                                  <Button onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
-                                  <Button variant="ghost" onClick={cancelEdit}><X className="h-4 w-4" /> Cancel</Button>
+                                  <Button onClick={handleSave} disabled={saving}>{saving ? t('common.loading') : t('common.success')}</Button>
+                                  <Button variant="ghost" onClick={cancelEdit}><X className="h-4 w-4" /></Button>
                                 </div>
                               </div>
                             )}

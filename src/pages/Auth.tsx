@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
 
 const AuthPage: React.FC = () => {
@@ -13,6 +14,7 @@ const AuthPage: React.FC = () => {
   const next = searchParams.get('next') || '/';
   const navigate = useNavigate();
   const { checkUser, register, login } = useAuth();
+  const { t } = useLanguage();
 
   const [step, setStep] = useState<'start' | 'login' | 'register'>('start');
   const [contactNumber, setContactNumber] = useState('');
@@ -22,7 +24,7 @@ const AuthPage: React.FC = () => {
 
   const handleContinue = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (!contactNumber) return toast.error('Please enter your contact number');
+    if (!contactNumber) return toast.error(t('toasts.enterContact'));
     setLoading(true);
     try {
       const res = await checkUser(contactNumber);
@@ -32,7 +34,7 @@ const AuthPage: React.FC = () => {
         setStep('register');
       }
     } catch (err: any) {
-      toast.error(err?.message || 'Failed to check user');
+      toast.error(err?.message || t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -40,14 +42,14 @@ const AuthPage: React.FC = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !password) return toast.error('Please provide name and password');
+    if (!name || !password) return toast.error(t('common.error'));
     setLoading(true);
     try {
       await register({ name, contactNumber, password });
-      toast.success('Registration successful');
+      toast.success(t('common.success'));
       navigate(next);
     } catch (err: any) {
-      toast.error(err?.message || 'Registration failed');
+      toast.error(err?.message || t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -55,14 +57,14 @@ const AuthPage: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!password) return toast.error('Please enter your password');
+    if (!password) return toast.error(t('common.error'));
     setLoading(true);
     try {
       await login({ contactNumber, password });
-      toast.success('Logged in');
+      toast.success(t('common.success'));
       navigate(next);
     } catch (err: any) {
-      toast.error(err?.message || 'Login failed');
+      toast.error(err?.message || t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -74,14 +76,14 @@ const AuthPage: React.FC = () => {
       <main className="flex-1 py-8">
         <div className="container max-w-lg">
           <div className="mb-6">
-            <h1 className="font-display text-2xl font-bold">Sign in or Register</h1>
-            <p className="text-muted-foreground">Enter your contact number to continue</p>
+            <h1 className="font-display text-2xl font-bold">{t('auth.welcome')}</h1>
+            <p className="text-muted-foreground">{t('auth.enterPhone')}</p>
           </div>
 
           {step === 'start' && (
             <form onSubmit={handleContinue} className="space-y-4">
               <div>
-                <Label htmlFor="contactNumber">Contact Number</Label>
+                <Label htmlFor="contactNumber">{t('addProduct.contactNumber')}</Label>
                 <Input
                   id="contactNumber"
                   placeholder="e.g., 9876543210"
@@ -90,7 +92,9 @@ const AuthPage: React.FC = () => {
                 />
               </div>
               <div className="flex gap-2">
-                <Button type="submit" className="flex-1" disabled={loading}>Continue</Button>
+                <Button type="submit" className="flex-1" disabled={loading}>
+                  {loading ? t('auth.checking') : t('auth.continue')}
+                </Button>
                 <Button variant="ghost" onClick={() => navigate(-1)}>Cancel</Button>
               </div>
             </form>
@@ -99,19 +103,21 @@ const AuthPage: React.FC = () => {
           {step === 'register' && (
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
-                <Label>Contact Number</Label>
+                <Label>{t('addProduct.contactNumber')}</Label>
                 <Input value={contactNumber} disabled />
               </div>
               <div>
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                <Label htmlFor="name">{t('auth.name')}</Label>
+                <Input id="name" placeholder={t('auth.enterName')} value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div>
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <Label htmlFor="password">{t('auth.password')}</Label>
+                <Input id="password" type="password" placeholder={t('auth.enterPassword')} value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
               <div className="flex gap-2">
-                <Button type="submit" className="flex-1" disabled={loading}>Register</Button>
+                <Button type="submit" className="flex-1" disabled={loading}>
+                  {loading ? t('common.loading') : t('auth.register')}
+                </Button>
                 <Button variant="ghost" onClick={() => setStep('start')}>Back</Button>
               </div>
             </form>
@@ -120,15 +126,17 @@ const AuthPage: React.FC = () => {
           {step === 'login' && (
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <Label>Contact Number</Label>
+                <Label>{t('addProduct.contactNumber')}</Label>
                 <Input value={contactNumber} disabled />
               </div>
               <div>
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <Label htmlFor="password">{t('auth.password')}</Label>
+                <Input id="password" type="password" placeholder={t('auth.enterPassword')} value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
               <div className="flex gap-2">
-                <Button type="submit" className="flex-1" disabled={loading}>Sign In</Button>
+                <Button type="submit" className="flex-1" disabled={loading}>
+                  {loading ? t('common.loading') : t('auth.login')}
+                </Button>
                 <Button variant="ghost" onClick={() => setStep('start')}>Back</Button>
               </div>
             </form>

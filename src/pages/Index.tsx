@@ -6,8 +6,9 @@ import ProductCard from '@/components/ProductCard';
 import CategoryCard from '@/components/CategoryCard';
 import { Button } from '@/components/ui/button';
 import { useProducts } from '@/hooks/useProducts';
-import { ProductCategory, categoryLabels } from '@/types/product';
+import { ProductCategory } from '@/types/product';
 import { ArrowRight } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const categories: ProductCategory[] = [
   'dairy', 'honey', 'spices', 'pickles', 'grains', 
@@ -16,6 +17,7 @@ const categories: ProductCategory[] = [
 
 const Index = () => {
   const { products, isLoading, getCategoryCounts } = useProducts();
+  const { t } = useLanguage();
   const categoryCounts = getCategoryCounts();
   const featuredProducts = products.slice(0, 6);
 
@@ -31,10 +33,10 @@ const Index = () => {
           <div className="container">
             <div className="text-center mb-10">
               <h2 className="font-display text-3xl font-bold text-foreground mb-3">
-                Browse by Category
+                {t('index.browseByCategory')}
               </h2>
               <p className="text-muted-foreground max-w-xl mx-auto">
-                Explore our wide range of authentic local products, from fresh dairy to handcrafted goods
+                {t('index.categoryDescription')}
               </p>
             </div>
 
@@ -56,15 +58,15 @@ const Index = () => {
             <div className="flex items-center justify-between mb-10">
               <div>
                 <h2 className="font-display text-3xl font-bold text-foreground mb-2">
-                  Featured Products
+                  {t('index.featuredProducts')}
                 </h2>
                 <p className="text-muted-foreground">
-                  Handpicked quality products from trusted local sellers
+                  {t('index.featuredDescription')}
                 </p>
               </div>
               <Link to="/products">
                 <Button variant="outline" className="gap-2">
-                  View All
+                  {t('index.viewAll')}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
@@ -90,15 +92,14 @@ const Index = () => {
         <section className="py-16 hero-gradient text-primary-foreground">
           <div className="container text-center">
             <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
-              Ready to Start Selling?
+              {t('index.readyToSell')}
             </h2>
             <p className="text-primary-foreground/80 max-w-xl mx-auto mb-8">
-              Join thousands of local sellers and reach customers in your area. 
-              It's free to list your products!
+              {t('index.sellDescription')}
             </p>
             <Link to="/add-product">
               <Button size="lg" variant="secondary" className="gap-2 px-8">
-                List Your Product
+                {t('index.listYourProduct')}
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>

@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import { useProducts } from '@/hooks/useProducts';
-import { ProductCategory, categoryLabels } from '@/types/product';
+import { ProductCategory } from '@/types/product';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Search, X } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const allCategories: ProductCategory[] = [
   'dairy', 'honey', 'spices', 'pickles', 'grains', 
@@ -24,6 +25,7 @@ const allCategories: ProductCategory[] = [
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { products, isLoading } = useProducts();
+  const { t, getCategoryLabel } = useLanguage();
   
   const [searchQuery, setSearchQuery] = useState('');
   const selectedCategory = searchParams.get('category') as ProductCategory | null;
@@ -72,10 +74,10 @@ const Products = () => {
           {/* Page Header */}
           <div className="mb-8">
             <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
-              {selectedCategory ? categoryLabels[selectedCategory] : 'All Products'}
+              {selectedCategory ? getCategoryLabel(selectedCategory) : t('products.title')}
             </h1>
             <p className="text-muted-foreground">
-              {filteredProducts.length} products available
+              {filteredProducts.length} {t('products.productsFound')}
             </p>
           </div>
 
@@ -84,7 +86,7 @@ const Products = () => {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search products, sellers, locations..."
+                placeholder={t('products.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -96,13 +98,13 @@ const Products = () => {
               onValueChange={handleCategoryChange}
             >
               <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="All Categories" />
+                <SelectValue placeholder={t('products.allCategories')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="all">{t('products.allCategories')}</SelectItem>
                 {allCategories.map(cat => (
                   <SelectItem key={cat} value={cat}>
-                    {categoryLabels[cat]}
+                    {getCategoryLabel(cat)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -111,7 +113,7 @@ const Products = () => {
             {(selectedCategory || searchQuery) && (
               <Button variant="ghost" onClick={clearFilters} className="gap-2">
                 <X className="h-4 w-4" />
-                Clear
+                {t('addProduct.clear')}
               </Button>
             )}
           </div>
@@ -132,12 +134,12 @@ const Products = () => {
           ) : (
             <div className="text-center py-16">
               <p className="text-4xl mb-4">🔍</p>
-              <h3 className="text-xl font-semibold text-foreground mb-2">No products found</h3>
+              <h3 className="text-xl font-semibold text-foreground mb-2">{t('products.noProducts')}</h3>
               <p className="text-muted-foreground mb-4">
-                Try adjusting your search or filter criteria
+                {t('products.tryDifferent')}
               </p>
               <Button variant="outline" onClick={clearFilters}>
-                Clear Filters
+                {t('addProduct.clear')}
               </Button>
             </div>
           )}
