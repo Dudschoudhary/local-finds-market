@@ -21,38 +21,44 @@ const ProductCard = ({ product }: ProductCardProps) => {
     : `₹${(displayPrice ?? 0).toLocaleString('en-IN')}`;
 
   return (
-    <Link to={`/product/${product.id}`} className="block group">
-      <article className="card-elevated rounded-xl overflow-hidden bg-card border border-border/50">
-        <div className="aspect-[4/3] overflow-hidden relative">
-          <img
-            src={product.images?.[0] ?? 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'}
-            alt={product.productName}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          {(product.images?.length ?? 0) > 1 && (
-            <span className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
-              +{(product.images!.length - 1)} photos
-            </span>
-          )}
-          <Badge 
-            className="absolute top-3 left-3 bg-accent text-accent-foreground border-0"
-          >
-            {getCategoryLabel(product.category)}
-          </Badge>
-          {/* Show Rent badge for rental listings */}
-          {product.listingType === 'rent' && (
-            <Badge className="absolute top-3 right-3 bg-blue-500 text-white border-0">
-              {t('productCard.forRent')}
+    <Link to={`/product/${product.id}`} className="block group h-full">
+      <article className="card-elevated rounded-xl overflow-hidden bg-card border border-border/50 h-full flex flex-col shadow-sm hover:shadow-lg transition-shadow duration-300">
+        {/* Image container with border and inner shadow */}
+        <div className="p-3 pb-0 flex-shrink-0">
+          <div className="aspect-[4/3] overflow-hidden relative rounded-lg border-2 border-border/30 shadow-inner">
+            <img
+              src={product.images?.[0] ?? 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'}
+              alt={product.productName}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            {/* Gradient overlay for better badge visibility */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+            {(product.images?.length ?? 0) > 1 && (
+              <span className="absolute bottom-2 right-2 bg-black/70 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full font-medium">
+                +{(product.images!.length - 1)} photos
+              </span>
+            )}
+            <Badge 
+              className="absolute top-3 left-3 bg-accent text-accent-foreground border-0 shadow-md"
+            >
+              {getCategoryLabel(product.category)}
             </Badge>
-          )}
+            {/* Show Rent badge for rental listings */}
+            {product.listingType === 'rent' && (
+              <Badge className="absolute top-3 right-3 bg-blue-500 text-white border-0 shadow-md">
+                {t('productCard.forRent')}
+              </Badge>
+            )}
+          </div>
         </div>
         
-        <div className="p-4 space-y-3">
-          <div>
+        {/* Content section with clear separation */}
+        <div className="p-4 space-y-3 flex flex-col flex-grow">
+          <div className="flex-grow">
             <h3 className="font-display text-lg font-semibold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
               {product.productName}
             </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+            <p className="text-sm text-muted-foreground line-clamp-2 mt-1 min-h-[2.5rem]">
               {product.description}
             </p>
           </div>
@@ -66,7 +72,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </span>
           </div>
 
-          <div className="pt-3 border-t border-border/50 flex items-center justify-between text-sm text-muted-foreground">
+          <div className="pt-3 border-t border-border/50 flex items-center justify-between text-sm text-muted-foreground mt-auto">
             <span className="flex items-center gap-1.5">
               <User className="h-3.5 w-3.5" />
               {product.sellerName}

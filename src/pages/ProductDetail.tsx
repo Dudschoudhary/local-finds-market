@@ -164,48 +164,53 @@ const ProductDetail = () => {
             {/* Product Images */}
             <div className="space-y-4">
               {/* Main Image with Navigation */}
-              <div className="aspect-square rounded-xl overflow-hidden bg-muted relative group">
-                <img
-                  src={product.images[currentImageIndex] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'}
-                  alt={`${product.productName} - Image ${currentImageIndex + 1}`}
-                  className="h-full w-full object-cover"
-                />
-                
-                {/* Navigation Arrows - Only show if multiple images */}
-                {product.images.length > 1 && (
-                  <>
-                    <button
-                      onClick={prevImage}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
-                    >
-                      <ChevronLeft className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={nextImage}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
-                    >
-                      <ChevronRight className="h-5 w-5" />
-                    </button>
-                    
-                    {/* Image Counter */}
-                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/60 text-white text-sm px-3 py-1 rounded-full">
-                      {currentImageIndex + 1} / {product.images.length}
-                    </div>
-                  </>
-                )}
+              <div className="p-3 bg-card rounded-2xl border border-border/50 shadow-sm">
+                <div className="aspect-square rounded-xl overflow-hidden bg-muted relative group border-2 border-border/30 shadow-inner">
+                  <img
+                    src={product.images[currentImageIndex] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'}
+                    alt={`${product.productName} - Image ${currentImageIndex + 1}`}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  
+                  {/* Gradient overlay for better visibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+                  
+                  {/* Navigation Arrows - Only show if multiple images */}
+                  {product.images.length > 1 && (
+                    <>
+                      <button
+                        onClick={prevImage}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-foreground rounded-full p-2.5 opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:scale-110"
+                      >
+                        <ChevronLeft className="h-5 w-5" />
+                      </button>
+                      <button
+                        onClick={nextImage}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-foreground rounded-full p-2.5 opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:scale-110"
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </button>
+                      
+                      {/* Image Counter */}
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/70 backdrop-blur-sm text-white text-sm px-4 py-1.5 rounded-full font-medium">
+                        {currentImageIndex + 1} / {product.images.length}
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Thumbnail Gallery - Only show if multiple images */}
               {product.images.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto pb-2">
+                <div className="flex gap-3 overflow-x-auto pb-2 px-1">
                   {product.images.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+                      className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all shadow-sm hover:shadow-md ${
                         index === currentImageIndex 
-                          ? 'border-primary' 
-                          : 'border-transparent hover:border-border'
+                          ? 'border-primary ring-2 ring-primary/30 scale-105' 
+                          : 'border-border/50 hover:border-primary/50'
                       }`}
                     >
                       <img
