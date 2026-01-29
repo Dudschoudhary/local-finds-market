@@ -53,7 +53,7 @@ const Header = () => {
           </div>
           <div className="flex flex-col">
             <span className="font-display text-xl font-semibold text-foreground">
-              LocalMart
+              DesiMart
             </span>
             <span className="text-xs text-muted-foreground flex items-center gap-1">
               <MapPin className="h-3 w-3" /> Local Products

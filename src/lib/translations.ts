@@ -53,20 +53,22 @@ export const translations = {
   // Footer
   footer: {
     tagline: {
-      en: 'Connecting local sellers with nearby buyers. Fresh, homemade, and authentic products at your fingertips.',
-      hi: 'स्थानीय विक्रेताओं को नज़दीकी खरीदारों से जोड़ना। ताज़ा, घरेलू और प्रामाणिक उत्पाद आपकी उंगलियों पर।'
+      en: 'Connecting local sellers with nearby buyers. Fresh, homemade, and authentic desi products at your fingertips.',
+      hi: 'स्थानीय विक्रेताओं को नज़दीकी खरीदारों से जोड़ना। ताज़ा, घरेलू और प्रामाणिक देसी उत्पाद आपकी उंगलियों पर।'
     },
     quickLinks: { en: 'Quick Links', hi: 'त्वरित लिंक' },
     browseProducts: { en: 'Browse Products', hi: 'उत्पाद देखें' },
     sellYourProduct: { en: 'Sell Your Product', hi: 'अपना उत्पाद बेचें' },
     howItWorks: { en: 'How It Works', hi: 'यह कैसे काम करता है' },
+    aboutUs: { en: 'About Us', hi: 'हमारे बारे में' },
     categoriesTitle: { en: 'Categories', hi: 'श्रेणियां' },
     support: { en: 'Support', hi: 'सहायता' },
     helpCenter: { en: 'Help Center', hi: 'सहायता केंद्र' },
     contactUs: { en: 'Contact Us', hi: 'संपर्क करें' },
     privacyPolicy: { en: 'Privacy Policy', hi: 'गोपनीयता नीति' },
     termsOfService: { en: 'Terms of Service', hi: 'सेवा की शर्तें' },
-    copyright: { en: '© 2024 LocalMart. All rights reserved.', hi: '© 2024 LocalMart. सर्वाधिकार सुरक्षित।' },
+    dmcaPolicy: { en: 'DMCA Policy', hi: 'DMCA नीति' },
+    copyright: { en: '© 2026 DesiMart. All rights reserved.', hi: '© 2026 DesiMart. सर्वाधिकार सुरक्षित।' },
     madeWith: { en: 'Made with', hi: 'के साथ बनाया' },
     forCommunities: { en: 'for local communities', hi: 'स्थानीय समुदायों के लिए' },
   },

@@ -32,7 +32,7 @@ const Footer = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                 <Store className="h-5 w-5" />
               </div>
-              <span className="font-display text-xl font-semibold">LocalMart</span>
+              <span className="font-display text-xl font-semibold">DesiMart</span>
             </Link>
             <p className="text-sm text-muted-foreground">
               {t('footer.tagline')}
@@ -44,7 +44,8 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/products" className="hover:text-primary transition-colors">{t('footer.browseProducts')}</Link></li>
               <li><a href="#" onClick={handleSellProduct} className="hover:text-primary transition-colors">{t('footer.sellYourProduct')}</a></li>
-              <li><Link to="/" className="hover:text-primary transition-colors">{t('footer.howItWorks')}</Link></li>
+              <li><Link to="/about-us" className="hover:text-primary transition-colors">{t('footer.aboutUs')}</Link></li>
+              <li><Link to="/contact-us" className="hover:text-primary transition-colors">{t('footer.contactUs')}</Link></li>
             </ul>
           </div>
 
@@ -64,10 +65,10 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground mb-4">{t('footer.support')}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-primary transition-colors">{t('footer.helpCenter')}</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">{t('footer.contactUs')}</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">{t('footer.privacyPolicy')}</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">{t('footer.termsOfService')}</a></li>
+              <li><Link to="/contact-us" className="hover:text-primary transition-colors">{t('footer.helpCenter')}</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-primary transition-colors">{t('footer.privacyPolicy')}</Link></li>
+              <li><Link to="/terms-conditions" className="hover:text-primary transition-colors">{t('footer.termsOfService')}</Link></li>
+              <li><Link to="/dmca-policy" className="hover:text-primary transition-colors">{t('footer.dmcaPolicy')}</Link></li>
             </ul>
           </div>
         </div>
