@@ -1,13 +1,27 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Store, Heart } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 import { categories } from '@/data/categories';
 
 const Footer = () => {
   const { t, getCategoryLabel } = useLanguage();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Show first 4 main categories in footer
   const footerCategories = categories.slice(0, 4);
+
+  const handleSellProduct = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!user) {
+      toast.error('Please login to add a product');
+      navigate('/auth');
+    } else {
+      navigate('/add-product');
+    }
+  };
 
   return (
     <footer className="border-t border-border bg-secondary/30 mt-auto">
@@ -29,7 +43,7 @@ const Footer = () => {
             <h4 className="font-semibold text-foreground mb-4">{t('footer.quickLinks')}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/products" className="hover:text-primary transition-colors">{t('footer.browseProducts')}</Link></li>
-              <li><Link to="/add-product" className="hover:text-primary transition-colors">{t('footer.sellYourProduct')}</Link></li>
+              <li><a href="#" onClick={handleSellProduct} className="hover:text-primary transition-colors">{t('footer.sellYourProduct')}</a></li>
               <li><Link to="/" className="hover:text-primary transition-colors">{t('footer.howItWorks')}</Link></li>
             </ul>
           </div>

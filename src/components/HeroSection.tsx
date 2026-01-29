@@ -1,10 +1,23 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, ShoppingBag, Store } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 const HeroSection = () => {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleStartSelling = () => {
+    if (!user) {
+      toast.error('Please login to add a product');
+      navigate('/auth');
+    } else {
+      navigate('/add-product');
+    }
+  };
 
   return (
     <section className="relative overflow-hidden py-20 md:py-32">
@@ -39,12 +52,15 @@ const HeroSection = () => {
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <Link to="/add-product">
-              <Button size="lg" variant="outline" className="gap-2 px-8 text-base">
-                <Store className="h-5 w-5" />
-                {t('hero.startSelling')}
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="gap-2 px-8 text-base"
+              onClick={handleStartSelling}
+            >
+              <Store className="h-5 w-5" />
+              {t('hero.startSelling')}
+            </Button>
           </div>
 
           <div className="mt-12 flex items-center justify-center gap-8 text-sm text-muted-foreground">

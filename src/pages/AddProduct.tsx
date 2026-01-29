@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Upload, MapPin, Loader2, Phone, X, ImagePlus, ChevronDown, ChevronRight, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
 const MAX_IMAGES = 3;
@@ -269,6 +270,7 @@ const AddProduct = () => {
   const navigate = useNavigate();
   const { addProduct } = useProducts();
   const { t, getCategoryLabel } = useLanguage();
+  const { user, checking } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
@@ -295,6 +297,14 @@ const AddProduct = () => {
   // Live location state
   const [location, setLocation] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null });
   const [locating, setLocating] = useState(false);
+
+  useEffect(() => {
+    // Wait for auth check to complete, then redirect if not logged in
+    if (!checking && !user) {
+      toast.error('Please login to add a product');
+      navigate('/auth');
+    }
+  }, [user, checking, navigate]);
 
   const requestLocation = () => {
     if (!navigator.geolocation) {
@@ -465,7 +475,13 @@ const AddProduct = () => {
   };
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    if (field === 'contactNumber') {
+      // Only allow digits
+      const digitsOnly = value.replace(/\D/g, '');
+      setFormData(prev => ({ ...prev, [field]: digitsOnly }));
+    } else {
+      setFormData(prev => ({ ...prev, [field]: value }));
+    }
   };
 
   return (
@@ -485,11 +501,29 @@ const AddProduct = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Top toggles: Sell / Rent */}
-            <div className="flex gap-3">
-              <button type="button" onClick={() => setListingType('sale')} className={`px-3 py-1 rounded ${listingType === 'sale' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>
+            <div className="flex gap-3 p-1 bg-secondary/50 rounded-xl w-fit">
+              <button 
+                type="button" 
+                onClick={() => setListingType('sale')} 
+                className={cn(
+                  "px-5 py-2.5 rounded-lg font-medium transition-all duration-200",
+                  listingType === 'sale' 
+                    ? 'bg-primary text-primary-foreground shadow-md' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                )}
+              >
                 {t('addProduct.sell')}
               </button>
-              <button type="button" onClick={() => setListingType('rent')} className={`px-3 py-1 rounded ${listingType === 'rent' ? 'bg-primary text-primary-foreground' : 'bg-card border'}`}>
+              <button 
+                type="button" 
+                onClick={() => setListingType('rent')} 
+                className={cn(
+                  "px-5 py-2.5 rounded-lg font-medium transition-all duration-200",
+                  listingType === 'rent' 
+                    ? 'bg-accent text-accent-foreground shadow-md' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                )}
+              >
                 {t('addProduct.rent')}
               </button>
             </div>
@@ -555,9 +589,17 @@ const AddProduct = () => {
                     value={formData.quantity}
                     onChange={(e) => handleChange('quantity', e.target.value)}
                     required
+                    className="flex-1"
                   />
-                  {/* Quantity unit select - options change based on listingType if needed */}
-                  <select value={quantityUnit} onChange={(e) => setQuantityUnit(e.target.value)} className="px-2 py-1 rounded border">
+                  {/* Quantity unit select - styled to match design system */}
+                  <select 
+                    value={quantityUnit} 
+                    onChange={(e) => setQuantityUnit(e.target.value)} 
+                    className="h-10 px-3 py-2 rounded-lg border border-input bg-background text-sm font-medium 
+                             text-foreground shadow-sm transition-colors
+                             hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1
+                             cursor-pointer min-w-[90px]"
+                  >
                     {listingType === 'sale' ? (
                       <>
                         <option value="kg">{t('units.kg')}</option>
@@ -583,17 +625,28 @@ const AddProduct = () => {
                 <div className="space-y-2">
                   <Label htmlFor="price">{t('addProduct.price')} *</Label>
                   <div className="flex items-center gap-2">
-                    <Input
-                      id="price"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      placeholder="e.g., 450"
-                      value={formData.price}
-                      onChange={(e) => handleChange('price', e.target.value)}
-                      required
-                    />
-                    <select value={priceUnit} onChange={(e) => setPriceUnit(e.target.value)} className="px-2 py-1 rounded border">
+                    <div className="relative flex-1">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">₹</span>
+                      <Input
+                        id="price"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="450"
+                        value={formData.price}
+                        onChange={(e) => handleChange('price', e.target.value)}
+                        required
+                        className="pl-8"
+                      />
+                    </div>
+                    <select 
+                      value={priceUnit} 
+                      onChange={(e) => setPriceUnit(e.target.value)} 
+                      className="h-10 px-3 py-2 rounded-lg border border-input bg-background text-sm font-medium 
+                               text-foreground shadow-sm transition-colors
+                               hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1
+                               cursor-pointer min-w-[100px]"
+                    >
                       <option value="per kg">{t('units.perKg')}</option>
                       <option value="per gm">{t('units.perGm')}</option>
                       <option value="per liter">{t('units.perLiter')}</option>
@@ -606,19 +659,35 @@ const AddProduct = () => {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <Label htmlFor="rentalPrice">{t('addProduct.rentalPrice')} *</Label>
+                  <Label htmlFor="rentalPrice" className="flex items-center gap-2">
+                    {t('addProduct.rentalPrice')} *
+                    <span className="text-xs text-accent font-normal bg-accent/10 px-2 py-0.5 rounded-full">
+                      {t('addProduct.rent')}
+                    </span>
+                  </Label>
                   <div className="flex items-center gap-2">
-                    <Input
-                      id="rentalPrice"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      placeholder="e.g., 500"
-                      value={rentalPrice}
-                      onChange={(e) => setRentalPrice(e.target.value)}
-                      required
-                    />
-                    <select value={priceUnit} onChange={(e) => setPriceUnit(e.target.value)} className="px-2 py-1 rounded border">
+                    <div className="relative flex-1">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">₹</span>
+                      <Input
+                        id="rentalPrice"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="500"
+                        value={rentalPrice}
+                        onChange={(e) => setRentalPrice(e.target.value)}
+                        required
+                        className="pl-8 border-accent/30 focus:border-accent focus:ring-accent/20"
+                      />
+                    </div>
+                    <select 
+                      value={priceUnit} 
+                      onChange={(e) => setPriceUnit(e.target.value)} 
+                      className="h-10 px-3 py-2 rounded-lg border border-accent/30 bg-background text-sm font-medium 
+                               text-foreground shadow-sm transition-colors
+                               hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent
+                               cursor-pointer min-w-[100px]"
+                    >
                       <option value="per piece">{t('units.perPiece')}</option>
                       <option value="combo">{t('addProduct.combo')}</option>
                       <option value="per km">{t('units.perKm')}</option>
