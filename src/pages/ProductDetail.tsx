@@ -148,28 +148,28 @@ const ProductDetail = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1 py-8">
+      <main className="flex-1 py-4 sm:py-8">
         <div className="container">
           {/* Back Button */}
           <Button
             variant="ghost"
-            className="gap-2 mb-6"
+            className="gap-2 mb-4"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="h-4 w-4" />
             {t('productDetail.backToProducts')}
           </Button>
 
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {/* Product Images */}
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-12">
+            {/* Product Images - Always first */}
             <div className="space-y-4">
               {/* Main Image with Navigation */}
-              <div className="p-3 bg-card rounded-2xl border border-border/50 shadow-sm">
-                <div className="aspect-square rounded-xl overflow-hidden bg-muted relative group border-2 border-border/30 shadow-inner">
+              <div className="p-2 sm:p-3 bg-card rounded-xl sm:rounded-2xl border border-border/50 shadow-sm">
+                <div className="relative w-full h-[250px] sm:h-[350px] md:h-[400px] rounded-lg sm:rounded-xl overflow-hidden bg-muted group border-2 border-border/30 shadow-inner">
                   <img
                     src={product.images[currentImageIndex] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'}
                     alt={`${product.productName} - Image ${currentImageIndex + 1}`}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                   />
                   
                   {/* Gradient overlay for better visibility */}
@@ -180,19 +180,19 @@ const ProductDetail = () => {
                     <>
                       <button
                         onClick={prevImage}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-foreground rounded-full p-2.5 opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:scale-110"
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-foreground rounded-full p-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:scale-110"
                       >
-                        <ChevronLeft className="h-5 w-5" />
+                        <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
                       </button>
                       <button
                         onClick={nextImage}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-foreground rounded-full p-2.5 opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:scale-110"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-foreground rounded-full p-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:scale-110"
                       >
-                        <ChevronRight className="h-5 w-5" />
+                        <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
                       </button>
                       
                       {/* Image Counter */}
-                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/70 backdrop-blur-sm text-white text-sm px-4 py-1.5 rounded-full font-medium">
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/70 backdrop-blur-sm text-white text-xs sm:text-sm px-3 py-1 rounded-full font-medium">
                         {currentImageIndex + 1} / {product.images.length}
                       </div>
                     </>
@@ -202,12 +202,12 @@ const ProductDetail = () => {
 
               {/* Thumbnail Gallery - Only show if multiple images */}
               {product.images.length > 1 && (
-                <div className="flex gap-3 overflow-x-auto pb-2 px-1">
+                <div className="flex gap-2 overflow-x-auto pb-2 px-1">
                   {product.images.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all shadow-sm hover:shadow-md ${
+                      className={`flex-shrink-0 w-14 h-14 sm:w-20 sm:h-20 rounded-lg sm:rounded-xl overflow-hidden border-2 transition-all shadow-sm hover:shadow-md ${
                         index === currentImageIndex 
                           ? 'border-primary ring-2 ring-primary/30 scale-105' 
                           : 'border-border/50 hover:border-primary/50'
@@ -225,42 +225,57 @@ const ProductDetail = () => {
             </div>
 
             {/* Product Info */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <div>
-                <Badge className="bg-accent text-accent-foreground mb-3">
+                <Badge className="bg-accent text-accent-foreground mb-2 sm:mb-3">
                   {categoryIcons[product.category]} {getCategoryLabel(product.category)}
                 </Badge>
-                <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
+                <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-1 sm:mb-2">
                   {product.productName}
                 </h1>
-                <p className="text-3xl font-bold text-primary">
+                <p className="text-2xl sm:text-3xl font-bold text-primary">
                   ₹{product.price != null ? product.price.toLocaleString('en-IN') : '0'}
                 </p>
               </div>
 
-              <div className="space-y-3 py-4 border-y border-border">
-                <div className="flex items-center gap-3 text-foreground">
-                  <Package className="h-5 w-5 text-muted-foreground" />
+              {/* Action Buttons */}
+              <div className="flex gap-2 sm:gap-3">
+                <Button className="flex-1 gap-1 sm:gap-2 text-sm sm:text-base" size="default" onClick={handleCall}>
+                  <Phone className="h-4 w-4 sm:h-5 sm:w-5" />
+                  {t('productDetail.callSeller')}
+                </Button>
+                <Button className="flex-1 gap-1 sm:gap-2 bg-green-600 hover:bg-green-700 text-sm sm:text-base" size="default" onClick={handleWhatsApp}>
+                  <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5" />
+                  {t('productDetail.whatsapp')}
+                </Button>
+                <Button variant="outline" size="default" onClick={handleShare}>
+                  <Share2 className="h-4 w-4 sm:h-5 sm:w-5" />
+                </Button>
+              </div>
+
+              <div className="space-y-2 sm:space-y-3 py-3 sm:py-4 border-y border-border text-sm sm:text-base">
+                <div className="flex items-center gap-2 sm:gap-3 text-foreground">
+                  <Package className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                   <span>{t('addProduct.quantity')}: {product.quantity ?? 'N/A'}</span>
                 </div>
-                <div className="flex items-center gap-3 text-foreground">
-                  <User className="h-5 w-5 text-muted-foreground" />
+                <div className="flex items-center gap-2 sm:gap-3 text-foreground">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                   <span>{t('productDetail.seller')}: {product.sellerName}</span>
                 </div>
                 {product.contactNumber && (
-                  <div className="flex items-center gap-3 text-foreground">
-                    <Phone className="h-5 w-5 text-muted-foreground" />
+                  <div className="flex items-center gap-2 sm:gap-3 text-foreground">
+                    <Phone className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                     <a href={`tel:${product.contactNumber}`} className="hover:text-primary transition-colors">
                       {product.contactNumber}
                     </a>
                   </div>
                 )}
-                <div className="flex items-center gap-3 text-foreground">
-                  <MapPin className="h-5 w-5 text-muted-foreground" />
+                <div className="flex items-center gap-2 sm:gap-3 text-foreground">
+                  <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                   <span>{product.address}</span>
                 </div>
-                <div className="flex items-center gap-3 text-foreground">
-                  <Calendar className="h-5 w-5 text-muted-foreground" />
+                <div className="flex items-center gap-2 sm:gap-3 text-foreground">
+                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                   <span>{t('productDetail.listedOn')} {new Date(product.createdAt).toLocaleDateString('en-IN', {
                     day: 'numeric',
                     month: 'long',
@@ -270,74 +285,62 @@ const ProductDetail = () => {
               </div>
 
               <div>
-                <h3 className="font-semibold text-foreground mb-2">{t('addProduct.description')}</h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <h3 className="font-semibold text-foreground mb-2 text-sm sm:text-base">{t('addProduct.description')}</h3>
+                <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
                   {product.description}
                 </p>
               </div>
-
-              {/* Show product location if available */}
-              {product.location ? (
-                <div className="rounded-xl overflow-hidden border border-border">
-                  <div className="p-3 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <MapPin className="h-5 w-5 text-muted-foreground" />
-                      <div className="text-sm text-foreground">
-                        <div>Lat: {Number(product.location.lat).toFixed(6)}</div>
-                        <div>Lng: {Number(product.location.lng).toFixed(6)}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button size="sm" variant="ghost" onClick={() => window.open(`https://www.google.com/maps?q=${product.location.lat},${product.location.lng}&z=15&output=embed`, '_blank')}>
-                        Open in Maps
-                      </Button>
-                      <Button size="sm" onClick={requestViewerLocationAndDirections} disabled={locating}>
-                        {locating ? t('addProduct.locating') : t('productDetail.getDirections')}
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="aspect-video">
-                    <iframe
-                      title="product-location"
-                      className="w-full h-full border-0"
-                      src={`https://www.google.com/maps?q=${product.location.lat},${product.location.lng}&z=15&output=embed`}
-                      loading="lazy"
-                    />
-                  </div>
-
-                  {viewerLocation && (
-                    <div className="p-3 text-xs text-muted-foreground">
-                      Your location captured: {viewerLocation.lat.toFixed(6)}, {viewerLocation.lng.toFixed(6)} — directions opened in new tab.
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="rounded-xl overflow-hidden border border-border">
-                  <div className="aspect-video bg-muted flex items-center justify-center">
-                    <div className="text-center text-muted-foreground">
-                      <MapPin className="h-8 w-8 mx-auto mb-2" />
-                      <p className="text-sm">Map view available with Cloud integration</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                <Button className="flex-1 gap-2" size="lg" onClick={handleCall}>
-                  <Phone className="h-5 w-5" />
-                  {t('productDetail.callSeller')}
-                </Button>
-                <Button className="flex-1 gap-2 bg-green-600 hover:bg-green-700" size="lg" onClick={handleWhatsApp}>
-                  <MessageCircle className="h-5 w-5" />
-                  {t('productDetail.whatsapp')}
-                </Button>
-                <Button variant="outline" size="lg" onClick={handleShare}>
-                  <Share2 className="h-5 w-5" />
-                </Button>
-              </div>
             </div>
+          </div>
+
+          {/* Map Section - Full width below the grid */}
+          <div className="mt-6">
+            {product.location ? (
+              <div className="rounded-xl overflow-hidden border border-border">
+                <div className="p-2 sm:p-3 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                    <div className="text-xs sm:text-sm text-foreground">
+                      <span>Lat: {Number(product.location.lat).toFixed(4)}</span>
+                      <span className="mx-1">,</span>
+                      <span>Lng: {Number(product.location.lng).toFixed(4)}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <Button size="sm" variant="ghost" className="text-xs sm:text-sm h-7 sm:h-8 px-2 sm:px-3" onClick={() => window.open(`https://www.google.com/maps?q=${product.location.lat},${product.location.lng}&z=15&output=embed`, '_blank')}>
+                      Maps
+                    </Button>
+                    <Button size="sm" className="text-xs sm:text-sm h-7 sm:h-8 px-2 sm:px-3" onClick={requestViewerLocationAndDirections} disabled={locating}>
+                      {locating ? '...' : t('productDetail.getDirections')}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="h-[200px] sm:h-[250px] md:h-[300px]">
+                  <iframe
+                    title="product-location"
+                    className="w-full h-full border-0"
+                    src={`https://www.google.com/maps?q=${product.location.lat},${product.location.lng}&z=15&output=embed`}
+                    loading="lazy"
+                  />
+                </div>
+
+                {viewerLocation && (
+                  <div className="p-2 text-xs text-muted-foreground">
+                    Your location: {viewerLocation.lat.toFixed(4)}, {viewerLocation.lng.toFixed(4)}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="rounded-xl overflow-hidden border border-border">
+                <div className="h-[150px] bg-muted flex items-center justify-center">
+                  <div className="text-center text-muted-foreground">
+                    <MapPin className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-1 sm:mb-2" />
+                    <p className="text-xs sm:text-sm">Map view available with Cloud integration</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </main>
