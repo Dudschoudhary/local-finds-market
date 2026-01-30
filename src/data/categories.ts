@@ -58,7 +58,7 @@ export const categories: Category[] = [
     name: { en: 'Seeds', hi: 'बीज' },
     icon: '🌱',
     subCategories: [
-      { id: 'rejga', name: { en: 'Rejga', hi: 'रेजगा' } },
+      { id: 'rejga', name: { en: 'Rijga', hi: 'रिजगा' } },
       { id: 'jeera', name: { en: 'Cumin Seeds', hi: 'जीरा' } },
       { id: 'arandi', name: { en: 'Castor Seeds', hi: 'अरंडी' } },
       { id: 'isabgol', name: { en: 'Psyllium', hi: 'इसबगोल' } },
@@ -86,7 +86,7 @@ export const categories: Category[] = [
     icon: '🌾',
     subCategories: [
       { id: 'doka', name: { en: 'Doka', hi: 'डोका' } },
-      { id: 'kutar', name: { en: 'Kutar', hi: 'कुटार' } },
+      { id: 'kutar', name: { en: 'Kutar', hi: 'कुतर' } },
       { id: 'gehu-chara', name: { en: 'Wheat Fodder', hi: 'गेहूं का चारा' } },
       { id: 'isabgol-chara', name: { en: 'Isabgol Fodder', hi: 'इसबगोल का चारा' } },
       { id: 'jawar-chara', name: { en: 'Sorghum Fodder', hi: 'ज्वार का चारा' } },
@@ -123,11 +123,11 @@ export const categories: Category[] = [
     icon: '🚜',
     subCategories: [
       { id: 'tavi', name: { en: 'Tavi', hi: 'तवी' } },
-      { id: 'trilli', name: { en: 'Trolley', hi: 'ट्रिल्ली' } },
-      { id: 'kalti-wetter', name: { en: 'Kalti Wetter', hi: 'काल्टी वेटर' } },
+      { id: 'trilli', name: { en: 'Trolley', hi: 'ट्रॉली' } },
+      { id: 'kalti-wetter', name: { en: 'Kalti Wetter', hi: 'कल्टी वेटर' } },
       { id: 'hera', name: { en: 'Hera', hi: 'हेरा' } },
       { id: 'thresher', name: { en: 'Thresher', hi: 'थ्रेशर' } },
-      { id: 'kutar-machine', name: { en: 'Kutar Machine', hi: 'कुटार मशीन' } },
+      { id: 'kutar-machine', name: { en: 'Kutar Machine', hi: 'कुतर मशीन' } },
     ],
   },
   {
@@ -167,7 +167,7 @@ export const categories: Category[] = [
       { id: 'rent-car', name: { en: 'Car', hi: 'कार' } },
       { id: 'rent-loading-vehicle', name: { en: 'Loading Vehicle', hi: 'लोडिंग वाहन' } },
       { id: 'rent-speaker', name: { en: 'Speaker (Mike Set)', hi: 'स्पीकर (माइक सेट)' } },
-      { id: 'rent-ghoda-patiya', name: { en: 'Ghoda & Patiya', hi: 'घोड़ा और पटिया' } },
+      { id: 'rent-ghoda-patiya', name: { en: 'Ghoda & Patiya', hi: 'घोड़ा और पाटिया' } },
       { id: 'rent-mixer', name: { en: 'Mixer', hi: 'मिक्सर' } },
       { id: 'rent-tractor', name: { en: 'Tractor', hi: 'ट्रैक्टर' } },
     ],
