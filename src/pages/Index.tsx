@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import ProductCard from '@/components/ProductCard';
 import CategoryAccordionMenu from '@/components/CategoryAccordionMenu';
+import Loader from '@/components/Loader';
 import { Button } from '@/components/ui/button';
 import { useProducts } from '@/hooks/useProducts';
 import { ArrowRight } from 'lucide-react';
@@ -73,10 +74,8 @@ const Index = () => {
             </div>
 
             {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="rounded-xl bg-muted animate-pulse aspect-[4/5]" />
-                ))}
+              <div className="flex items-center justify-center py-16">
+                <Loader size="large" text="Loading products..." />
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

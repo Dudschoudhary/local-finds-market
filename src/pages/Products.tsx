@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
+import Loader from '@/components/Loader';
 import { useProducts } from '@/hooks/useProducts';
 import { categories, getCategoryById, getSubCategoryById } from '@/data/categories';
 import { Button } from '@/components/ui/button';
@@ -138,10 +139,8 @@ const Products = () => {
 
           {/* Products Grid */}
           {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="rounded-xl bg-muted animate-pulse aspect-[4/5]" />
-              ))}
+            <div className="flex items-center justify-center py-16">
+              <Loader size="large" text="Loading products..." />
             </div>
           ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

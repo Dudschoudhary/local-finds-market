@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Loader from '@/components/Loader';
 import { useProducts } from '@/hooks/useProducts';
 import { categoryIcons } from '@/types/product';
 import { Button } from '@/components/ui/button';
@@ -107,18 +108,8 @@ const ProductDetail = () => {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1 container py-8">
-          <div className="animate-pulse space-y-6">
-            <div className="h-8 w-32 bg-muted rounded" />
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="aspect-square bg-muted rounded-xl" />
-              <div className="space-y-4">
-                <div className="h-10 bg-muted rounded w-3/4" />
-                <div className="h-6 bg-muted rounded w-1/2" />
-                <div className="h-24 bg-muted rounded" />
-              </div>
-            </div>
-          </div>
+        <main className="flex-1 flex items-center justify-center">
+          <Loader size="large" text="Loading product..." />
         </main>
         <Footer />
       </div>

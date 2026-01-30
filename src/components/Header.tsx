@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Plus, Store, MapPin, Globe, Menu, X } from 'lucide-react';
+import { Plus, Store, Globe, Menu, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useState, useRef, useEffect } from 'react';

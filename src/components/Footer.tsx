@@ -1,9 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Store, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { categories } from '@/data/categories';
+import logoImage from '@/assets/images/desimart.png';
 
 const Footer = () => {
   const { t, getCategoryLabel } = useLanguage();
@@ -29,8 +30,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-                <Store className="h-5 w-5" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden">
+                <img src={logoImage} alt="DesiMart Logo" className="h-full w-full object-cover" />
               </div>
               <span className="font-display text-xl font-semibold">DesiMart</span>
             </Link>
