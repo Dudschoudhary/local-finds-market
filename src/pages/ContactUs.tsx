@@ -143,7 +143,7 @@ const ContactUs = () => {
                       <h3 className="font-semibold text-foreground">
                         {language === 'hi' ? 'ईमेल' : 'Email'}
                       </h3>
-                      <p className="text-sm text-muted-foreground">support@desimart.in</p>
+                      <p className="text-sm text-muted-foreground">dudaram656@gmail.com</p>
                     </div>
                   </div>
                 </div>
@@ -157,7 +157,7 @@ const ContactUs = () => {
                       <h3 className="font-semibold text-foreground">
                         {language === 'hi' ? 'फ़ोन' : 'Phone'}
                       </h3>
-                      <p className="text-sm text-muted-foreground">+91 98765 43210</p>
+                      <p className="text-sm text-muted-foreground">+91 94686 50730</p>
                     </div>
                   </div>
                 </div>

@@ -63,7 +63,9 @@ const DMCAPolicy = () => {
                 <p className="text-muted-foreground">
                   <strong>{language === 'hi' ? 'कॉपीराइट एजेंट' : 'Copyright Agent'}</strong><br />
                   DesiMart<br />
-                  Email: dmca@desimart.in<br />
+                  Website: desimart.me<br />
+                  Email: dudaram656@gmail.com<br />
+                  Phone: +91 94686 50730<br />
                   {language === 'hi' ? 'पता: भारत' : 'Address: India'}
                 </p>
               </div>
@@ -90,7 +92,9 @@ const DMCAPolicy = () => {
                   : 'For any questions related to DMCA, please contact us:'}
               </p>
               <p className="text-muted-foreground">
-                Email: dmca@desimart.in<br />
+                Website: desimart.me<br />
+                Email: dudaram656@gmail.com<br />
+                Phone: +91 94686 50730<br />
                 {language === 'hi' ? 'पता: भारत' : 'Address: India'}
               </p>
             </section>

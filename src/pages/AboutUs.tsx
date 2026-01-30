@@ -202,7 +202,9 @@ const AboutUs = () => {
                   : 'To get in touch with us:'}
               </p>
               <p className="text-muted-foreground">
-                Email: hello@desimart.in<br />
+                Website: desimart.me<br />
+                Email: dudaram656@gmail.com<br />
+                Phone: +91 94686 50730<br />
                 {language === 'hi' ? 'पता: भारत' : 'Address: India'}
               </p>
             </section>

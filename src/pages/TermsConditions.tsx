@@ -190,7 +190,9 @@ const TermsConditions = () => {
                   : 'For any questions about these Terms and Conditions, please contact us:'}
               </p>
               <p className="text-muted-foreground">
-                Email: legal@desimart.in<br />
+                Website: desimart.me<br />
+                Email: dudaram656@gmail.com<br />
+                Phone: +91 94686 50730<br />
                 {language === 'hi' ? 'पता: भारत' : 'Address: India'}
               </p>
             </section>
