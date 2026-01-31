@@ -1,7 +1,9 @@
 // Simple authentication middleware for demo purposes
 // Accepts either Authorization: Bearer <userId> or x-user-id header
 
-const requireAuth = (req, res, next) => {
+const User = require('../models/userModel');
+
+const requireAuth = async (req, res, next) => {
   const auth = req.headers.authorization || req.headers['x-user-id'];
   if (!auth) {
     return res.status(401).json({ message: 'Unauthorized: missing credentials' });
@@ -16,9 +18,19 @@ const requireAuth = (req, res, next) => {
 
   if (!userId) return res.status(401).json({ message: 'Unauthorized: invalid credentials' });
 
-  // Attach a minimal user object to req. In real app this would verify a JWT/session.
-  req.user = { id: userId };
-  next();
+  try {
+    // Fetch user from database to get contactNumber
+    const user = await User.findById(userId).select('-passwordHash');
+    if (!user) {
+      return res.status(401).json({ message: 'Unauthorized: user not found' });
+    }
+    
+    // Attach user object with contactNumber to req
+    req.user = { id: userId, contactNumber: user.contactNumber, name: user.name };
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: 'Unauthorized: invalid credentials' });
+  }
 };
 
 module.exports = { requireAuth };
