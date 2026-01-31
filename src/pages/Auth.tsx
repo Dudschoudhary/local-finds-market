@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
+import { Eye, EyeOff } from 'lucide-react';
 
 const AuthPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -20,6 +21,7 @@ const AuthPage: React.FC = () => {
   const [contactNumber, setContactNumber] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleContinue = async (e?: React.FormEvent) => {
@@ -112,7 +114,23 @@ const AuthPage: React.FC = () => {
               </div>
               <div>
                 <Label htmlFor="password">{t('auth.password')}</Label>
-                <Input id="password" type="password" placeholder={t('auth.enterPassword')} value={password} onChange={(e) => setPassword(e.target.value)} />
+                <div className="relative">
+                  <Input 
+                    id="password" 
+                    type={showPassword ? "text" : "password"} 
+                    placeholder={t('auth.enterPassword')} 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
               <div className="flex gap-2">
                 <Button type="submit" className="flex-1" disabled={loading}>
@@ -131,7 +149,23 @@ const AuthPage: React.FC = () => {
               </div>
               <div>
                 <Label htmlFor="password">{t('auth.password')}</Label>
-                <Input id="password" type="password" placeholder={t('auth.enterPassword')} value={password} onChange={(e) => setPassword(e.target.value)} />
+                <div className="relative">
+                  <Input 
+                    id="password" 
+                    type={showPassword ? "text" : "password"} 
+                    placeholder={t('auth.enterPassword')} 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
               <div className="flex gap-2">
                 <Button type="submit" className="flex-1" disabled={loading}>

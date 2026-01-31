@@ -55,16 +55,19 @@ const ProductCard = ({ product }: ProductCardProps) => {
         {/* Content section with clear separation */}
         <div className="p-4 space-y-3 flex flex-col flex-grow">
           <div className="flex-grow">
-            <h3 className="font-display text-lg font-semibold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
-              {product.productName}
-            </h3>
+            {/* Product name in attractive banner/strip style */}
+            <div className="bg-orange-600 text-white p-2 capitalize mb-2 rounded-lg shadow-sm">
+              <h3 className="font-display ms-3 text-lg font-semibold text-white line-clamp-1 group-hover:text-gray-100 transition-colors">
+                {product.productName}
+              </h3>
+            </div>
             <p className="text-sm text-muted-foreground line-clamp-2 mt-1 min-h-[2.5rem]">
               {product.description}
             </p>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-xl font-bold text-primary">
+            <span className="text-xl font-bold text-red-500">
               {priceLabel}
             </span>
             <span className="text-sm text-muted-foreground">

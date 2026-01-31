@@ -1,6 +1,12 @@
 export type Language = 'en' | 'hi';
 
 export const translations = {
+  // Header
+  header: {
+    home: { en: 'Home', hi: 'होम' },
+    allProducts: { en: 'All Products', hi: 'सभी Products' },
+  },
+
   // Categories
   categories: {
     dairy: { en: 'Dairy & Ghee', hi: 'डेयरी और घी' },
@@ -173,6 +179,8 @@ export const translations = {
     enterName: { en: 'Enter your name', hi: 'अपना नाम दर्ज करें' },
     enterPhone: { en: 'Enter your phone number', hi: 'अपना फोन नंबर दर्ज करें' },
     enterPassword: { en: 'Enter your password', hi: 'अपना पासवर्ड दर्ज करें' },
+    showPassword: { en: 'Show password', hi: 'पासवर्ड दिखाएं' },
+    hidePassword: { en: 'Hide password', hi: 'पासवर्ड छुपाएं' },
     continue: { en: 'Continue', hi: 'जारी रखें' },
     checking: { en: 'Checking...', hi: 'जांच हो रही है...' },
   },
