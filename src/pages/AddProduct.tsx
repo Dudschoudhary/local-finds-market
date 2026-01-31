@@ -578,27 +578,41 @@ const AddProduct = () => {
               />
             </div>
 
-            {/* Quantity & Price / Rental Price */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Quantity & Price Section */}
+            {/* Mobile: 2 rows (quantity row, then price row) | Desktop: 1 row with 2 columns */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Quantity */}
               <div className="space-y-2">
                 <Label htmlFor="quantity">{t('addProduct.quantity')} *</Label>
                 <div className="flex items-center gap-2">
                   <Input
                     id="quantity"
-                    placeholder="e.g., 1"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="e.g., 10"
                     value={formData.quantity}
                     onChange={(e) => handleChange('quantity', e.target.value)}
+                    onKeyDown={(e) => {
+                      // Block non-numeric keys except allowed ones
+                      if (
+                        !/[0-9.]/.test(e.key) &&
+                        !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     required
-                    className="flex-1"
+                    className="flex-1 min-w-0"
                   />
-                  {/* Quantity unit select - styled to match design system */}
+                  {/* Quantity unit select */}
                   <select 
                     value={quantityUnit} 
                     onChange={(e) => setQuantityUnit(e.target.value)} 
                     className="h-10 px-3 py-2 rounded-lg border border-input bg-background text-sm font-medium 
                              text-foreground shadow-sm transition-colors
                              hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1
-                             cursor-pointer min-w-[90px]"
+                             cursor-pointer w-[120px] flex-shrink-0"
                   >
                     {listingType === 'sale' ? (
                       <>
@@ -618,14 +632,14 @@ const AddProduct = () => {
                     )}
                   </select>
                 </div>
-                {/* For rent show quantity mode toggle as well (Item / Combo) */}
-                
               </div>
+
+              {/* Price */}
               {listingType === 'sale' ? (
                 <div className="space-y-2">
                   <Label htmlFor="price">{t('addProduct.price')} *</Label>
                   <div className="flex items-center gap-2">
-                    <div className="relative flex-1">
+                    <div className="relative flex-1 min-w-0">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">₹</span>
                       <Input
                         id="price"
@@ -645,7 +659,7 @@ const AddProduct = () => {
                       className="h-10 px-3 py-2 rounded-lg border border-input bg-background text-sm font-medium 
                                text-foreground shadow-sm transition-colors
                                hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1
-                               cursor-pointer min-w-[100px]"
+                               cursor-pointer w-[120px] flex-shrink-0"
                     >
                       <option value="per kg">{t('units.perKg')}</option>
                       <option value="per gm">{t('units.perGm')}</option>
@@ -666,7 +680,7 @@ const AddProduct = () => {
                     </span>
                   </Label>
                   <div className="flex items-center gap-2">
-                    <div className="relative flex-1">
+                    <div className="relative flex-1 min-w-0">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">₹</span>
                       <Input
                         id="rentalPrice"
@@ -686,7 +700,7 @@ const AddProduct = () => {
                       className="h-10 px-3 py-2 rounded-lg border border-accent/30 bg-background text-sm font-medium 
                                text-foreground shadow-sm transition-colors
                                hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent
-                               cursor-pointer min-w-[100px]"
+                               cursor-pointer w-[120px] flex-shrink-0"
                     >
                       <option value="per piece">{t('units.perPiece')}</option>
                       <option value="combo">{t('addProduct.combo')}</option>
