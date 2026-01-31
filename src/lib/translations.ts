@@ -17,15 +17,15 @@ export const translations = {
 
   // Hero Section
   hero: {
-    badge: { en: 'Connecting local sellers with buyers', hi: 'स्थानीय विक्रेताओं को खरीदारों से जोड़ना' },
-    title1: { en: 'Discover', hi: 'खोजें' },
-    titleHighlight: { en: 'Fresh & Homemade', hi: 'ताज़ा और घरेलू' },
-    title2: { en: 'Products Near You', hi: 'आपके पास उत्पाद' },
+    badge: { en: 'Connecting local sellers with buyers', hi: 'स्थानीय विक्रेताओं और ग्राहकों के बीच सीधा संपर्क' },
+    title1: { en: 'Now Discover', hi: 'अब खोजें ' },
+    titleHighlight: { en: 'Fresh & Desi Homemade', hi: 'अपने आसपास का ताज़ा और ' },
+    title2: { en: 'Products Near You', hi: 'देसी घरेलू सामान.....' },
     description: {
-      en: 'From pure desi ghee to organic honey, find authentic local products from trusted sellers in your area. Support small businesses and get quality you can trust.',
-      hi: 'शुद्ध देसी घी से लेकर जैविक शहद तक, अपने क्षेत्र में विश्वसनीय विक्रेताओं से प्रामाणिक स्थानीय उत्पाद खोजें। छोटे व्यवसायों का समर्थन करें और विश्वसनीय गुणवत्ता प्राप्त करें।'
+      en: 'From desi ghee to organic honey — discover pure and authentic products from trusted local sellers. Support small businesses and experience quality you can trust.',
+      hi: 'देसी घी हो या जैविक शहद — अपने आसपास के भरोसेमंद विक्रेताओं से शुद्ध और प्रामाणिक उत्पाद पाएँ। स्थानीय व्यापार को बढ़ावा दें और गुणवत्ता पर भरोसा करें।'
     },
-    browseProducts: { en: 'Browse Products', hi: 'उत्पाद देखें' },
+    browseProducts: { en: 'All Products', hi: 'Product देखें' },
     startSelling: { en: 'Start Selling', hi: 'बेचना शुरू करें' },
     verifiedSellers: { en: 'Verified Sellers', hi: 'सत्यापित विक्रेता' },
     locationBased: { en: 'Location-Based', hi: 'स्थान-आधारित' },
@@ -34,31 +34,31 @@ export const translations = {
 
   // Index Page
   index: {
-    browseByCategory: { en: 'Browse by Category', hi: 'श्रेणी के अनुसार ब्राउज़ करें' },
+    browseByCategory: { en: 'Browse by Category', hi: 'अपनी पसंदीदा Category चुनें' },
     categoryDescription: {
-      en: 'Explore our wide range of authentic local products, from fresh dairy to handcrafted goods',
-      hi: 'ताज़ी डेयरी से लेकर हस्तनिर्मित सामान तक, हमारे प्रामाणिक स्थानीय उत्पादों की विस्तृत श्रृंखला देखें'
+      en: 'Find essential products for your daily needs here.” ⭐',
+      hi: 'दैनिक जीवन में उपयोग होने वाले ज़रूरी Products यहाँ उपलब्ध हैं।'
     },
-    featuredProducts: { en: 'Featured Products', hi: 'विशेष उत्पाद' },
-    featuredDescription: { en: 'Handpicked quality products from trusted local sellers', hi: 'विश्वसनीय स्थानीय विक्रेताओं से चुने हुए गुणवत्ता वाले उत्पाद' },
+    featuredProducts: { en: 'Featured Products', hi: 'विशेष Product' },
+    featuredDescription: { en: 'Handpicked quality products from trusted local sellers', hi: 'विश्वसनीय स्थानीय विक्रेताओं से चुने हुए गुणवत्ता वाले Product' },
     viewAll: { en: 'View All', hi: 'सभी देखें' },
     readyToSell: { en: 'Ready to Start Selling?', hi: 'बेचना शुरू करने के लिए तैयार?' },
     sellDescription: {
       en: "Join thousands of local sellers and reach customers in your area. It's free to list your products!",
-      hi: 'हजारों स्थानीय विक्रेताओं से जुड़ें और अपने क्षेत्र में ग्राहकों तक पहुंचें। अपने उत्पादों को सूचीबद्ध करना मुफ्त है!'
+      hi: 'हजारों स्थानीय विक्रेताओं से जुड़ें और अपने क्षेत्र में ग्राहकों तक पहुंचें। अपने Products को सूचीबद्ध करना मुफ्त है!'
     },
-    listYourProduct: { en: 'List Your Product', hi: 'अपना उत्पाद सूचीबद्ध करें' },
+    listYourProduct: { en: 'List Your Product', hi: 'अपना Product सूचीबद्ध करें' },
   },
 
   // Footer
   footer: {
     tagline: {
       en: 'Connecting local sellers with nearby buyers. Fresh, homemade, and authentic desi products at your fingertips.',
-      hi: 'स्थानीय विक्रेताओं को नज़दीकी खरीदारों से जोड़ना। ताज़ा, घरेलू और प्रामाणिक देसी उत्पाद आपकी उंगलियों पर।'
+      hi: 'स्थानीय विक्रेताओं को नज़दीकी खरीदारों से जोड़ना। ताज़ा, घरेलू और प्रामाणिक देसी Product आपकी उंगलियों पर।'
     },
-    quickLinks: { en: 'Quick Links', hi: 'त्वरित लिंक' },
-    browseProducts: { en: 'Browse Products', hi: 'उत्पाद देखें' },
-    sellYourProduct: { en: 'Sell Your Product', hi: 'अपना उत्पाद बेचें' },
+    quickLinks: { en: 'Quick Links', hi: 'महत्वपूर्ण लिंक' },
+    browseProducts: { en: 'All Products', hi: 'Product देखें' },
+    sellYourProduct: { en: 'Sell Your Product', hi: 'अपना Product बेचें' },
     howItWorks: { en: 'How It Works', hi: 'यह कैसे काम करता है' },
     aboutUs: { en: 'About Us', hi: 'हमारे बारे में' },
     categoriesTitle: { en: 'Categories', hi: 'श्रेणियां' },
@@ -75,8 +75,8 @@ export const translations = {
 
   // Add Product Page
   addProduct: {
-    title: { en: 'List Your Product', hi: 'अपना उत्पाद सूचीबद्ध करें' },
-    subtitle: { en: 'Fill in the details below to start selling or renting your product', hi: 'अपना उत्पाद बेचने या किराए पर देने के लिए नीचे विवरण भरें' },
+    title: { en: 'List Your Product', hi: 'अपना Product सूचीबद्ध करें' },
+    subtitle: { en: 'Fill in the details below to start selling or renting your product', hi: 'अपना Product बेचने या किराए पर देने के लिए नीचे विवरण भरें' },
     sell: { en: 'Sell', hi: 'बेचें' },
     rent: { en: 'Rent', hi: 'किराया' },
     sellerName: { en: 'Seller Name', hi: 'विक्रेता का नाम' },
@@ -84,7 +84,7 @@ export const translations = {
     enterSellerName: { en: 'Enter seller name or business', hi: 'विक्रेता का नाम या व्यवसाय दर्ज करें' },
     enterRentName: { en: 'Enter contact name for rental', hi: 'किराए के लिए संपर्क नाम दर्ज करें' },
     contactNumber: { en: 'Contact Number', hi: 'संपर्क नंबर' },
-    productName: { en: 'Product Name', hi: 'उत्पाद का नाम' },
+    productName: { en: 'Product Name', hi: 'Product का नाम' },
     productNamePlaceholder: { en: 'e.g., Pure Desi Cow Ghee', hi: 'उदा., शुद्ध देसी गाय का घी' },
     category: { en: 'Category', hi: 'श्रेणी' },
     selectCategory: { en: 'Select a category', hi: 'एक श्रेणी चुनें' },
@@ -99,23 +99,23 @@ export const translations = {
     other: { en: 'Other', hi: 'अन्य' },
     item: { en: 'Item', hi: 'वस्तु' },
     combo: { en: 'Combo', hi: 'कॉम्बो' },
-    productImages: { en: 'Product Images', hi: 'उत्पाद की छवियां' },
+    productImages: { en: 'Product Images', hi: 'Product की छवियां' },
     upTo: { en: 'up to', hi: 'अधिकतम' },
-    clickToUpload: { en: 'Click to upload product images', hi: 'उत्पाद छवियां अपलोड करने के लिए क्लिक करें' },
+    clickToUpload: { en: 'Click to upload product images', hi: 'Product छवियां अपलोड करने के लिए क्लिक करें' },
     addMoreImages: { en: 'Add more images', hi: 'और छवियां जोड़ें' },
     remaining: { en: 'remaining', hi: 'शेष' },
     imageSize: { en: 'PNG, JPG up to 1MB each', hi: 'PNG, JPG प्रत्येक 1MB तक' },
     main: { en: 'Main', hi: 'मुख्य' },
     description: { en: 'Description', hi: 'विवरण' },
-    descriptionPlaceholder: { en: 'Describe your product, its quality, how it\'s made, etc.', hi: 'अपने उत्पाद, उसकी गुणवत्ता, कैसे बना है, आदि का वर्णन करें' },
+    descriptionPlaceholder: { en: 'Describe your product, its quality, how it\'s made, etc.', hi: 'अपने Product, उसकी गुणवत्ता, कैसे बना है, आदि का वर्णन करें' },
     address: { en: 'Address / Location', hi: 'पता / स्थान' },
     addressPlaceholder: { en: 'e.g., Anand, Gujarat', hi: 'उदा., आनंद, गुजरात' },
     useGPS: { en: 'Use GPS', hi: 'GPS उपयोग करें' },
     locating: { en: 'Locating…', hi: 'स्थान खोज रहे हैं…' },
-    gpsNote: { en: 'Capture your live GPS location. This will be saved with the product.', hi: 'अपना लाइव GPS स्थान कैप्चर करें। यह उत्पाद के साथ सहेजा जाएगा।' },
+    gpsNote: { en: 'Capture your live GPS location. This will be saved with the product.', hi: 'अपना लाइव GPS स्थान कैप्चर करें। यह Product के साथ सहेजा जाएगा।' },
     clear: { en: 'Clear', hi: 'साफ़ करें' },
-    listProduct: { en: 'List Product', hi: 'उत्पाद सूचीबद्ध करें' },
-    listingProduct: { en: 'Listing Product...', hi: 'उत्पाद सूचीबद्ध हो रहा है...' },
+    listProduct: { en: 'List Product', hi: 'Product सूचीबद्ध करें' },
+    listingProduct: { en: 'Listing Product...', hi: 'Product सूचीबद्ध हो रहा है...' },
   },
 
   // Product Card
@@ -129,24 +129,24 @@ export const translations = {
 
   // Products Page
   products: {
-    title: { en: 'All Products', hi: 'सभी उत्पाद' },
-    searchPlaceholder: { en: 'Search products...', hi: 'उत्पाद खोजें...' },
+    title: { en: 'All Products', hi: 'देसी बाजार गैलरी' },
+    searchPlaceholder: { en: 'Search products...', hi: 'Product खोजें...' },
     allCategories: { en: 'All Categories', hi: 'सभी श्रेणियां' },
-    noProducts: { en: 'No products found', hi: 'कोई उत्पाद नहीं मिला' },
+    noProducts: { en: 'No products found', hi: 'कोई Product नहीं मिला' },
     tryDifferent: { en: 'Try a different search or category', hi: 'कोई अन्य खोज या श्रेणी आज़माएं' },
-    productsFound: { en: 'products found', hi: 'उत्पाद मिले' },
+    productsFound: { en: 'products found', hi: 'products मिले' },
   },
 
   // Product Detail Page
   productDetail: {
-    backToProducts: { en: 'Back to Products', hi: 'उत्पादों पर वापस' },
+    backToProducts: { en: 'Back to Products', hi: 'Products पर वापस' },
     seller: { en: 'Seller', hi: 'विक्रेता' },
     contact: { en: 'Contact', hi: 'संपर्क' },
     location: { en: 'Location', hi: 'स्थान' },
     listedOn: { en: 'Listed on', hi: 'सूचीबद्ध' },
     callSeller: { en: 'Call Seller', hi: 'विक्रेता को कॉल करें' },
     whatsapp: { en: 'WhatsApp', hi: 'व्हाट्सएप' },
-    productNotFound: { en: 'Product not found', hi: 'उत्पाद नहीं मिला' },
+    productNotFound: { en: 'Product not found', hi: 'Product नहीं मिला' },
     getDirections: { en: 'Get Directions', hi: 'दिशा-निर्देश प्राप्त करें' },
   },
 
@@ -155,7 +155,7 @@ export const translations = {
     title: { en: 'My Dashboard', hi: 'मेरा डैशबोर्ड' },
     myListings: { en: 'My Listings', hi: 'मेरी सूची' },
     noListings: { en: 'You have no listings yet', hi: 'आपकी अभी तक कोई सूची नहीं है' },
-    addFirst: { en: 'Add your first product', hi: 'अपना पहला उत्पाद जोड़ें' },
+    addFirst: { en: 'Add your first product', hi: 'अपना पहला Product जोड़ें' },
     edit: { en: 'Edit', hi: 'संपादित करें' },
     delete: { en: 'Delete', hi: 'हटाएं' },
     markAsSold: { en: 'Mark as Sold', hi: 'बिका हुआ चिह्नित करें' },
@@ -212,12 +212,12 @@ export const translations = {
     locationCaptured: { en: 'Location captured', hi: 'स्थान कैप्चर किया गया' },
     locationError: { en: 'Unable to retrieve location', hi: 'स्थान प्राप्त करने में असमर्थ' },
     geoNotSupported: { en: 'Geolocation is not supported by your browser', hi: 'आपका ब्राउज़र जियोलोकेशन का समर्थन नहीं करता' },
-    productListed: { en: 'Product listed successfully!', hi: 'उत्पाद सफलतापूर्वक सूचीबद्ध!' },
-    productVisible: { en: 'Your product is now visible to buyers.', hi: 'आपका उत्पाद अब खरीदारों को दिखाई दे रहा है।' },
+    productListed: { en: 'Product listed successfully!', hi: 'Product सफलतापूर्वक सूचीबद्ध!' },
+    productVisible: { en: 'Your product is now visible to buyers.', hi: 'आपका Product अब खरीदारों को दिखाई दे रहा है।' },
     enterSellerName: { en: 'Please enter seller name', hi: 'कृपया विक्रेता का नाम दर्ज करें' },
     enterRentName: { en: 'Please enter rent contact name', hi: 'कृपया किराए का संपर्क नाम दर्ज करें' },
     enterContact: { en: 'Please enter contact number', hi: 'कृपया संपर्क नंबर दर्ज करें' },
-    enterProductName: { en: 'Please enter product name', hi: 'कृपया उत्पाद का नाम दर्ज करें' },
+    enterProductName: { en: 'Please enter product name', hi: 'कृपया Product का नाम दर्ज करें' },
     selectCategory: { en: 'Please select a category', hi: 'कृपया एक श्रेणी चुनें' },
     captureLocation: { en: 'Please capture your live location using the "Use GPS" button', hi: 'कृपया "GPS उपयोग करें" बटन का उपयोग करके अपना लाइव स्थान कैप्चर करें' },
     enterPrice: { en: 'Please enter a price for sale listings', hi: 'कृपया बिक्री सूची के लिए कीमत दर्ज करें' },

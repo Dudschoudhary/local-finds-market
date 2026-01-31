@@ -39,7 +39,7 @@ const TermsConditions = () => {
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 {language === 'hi' 
-                  ? 'DesiMart एक ऑनलाइन मार्केटप्लेस प्लेटफॉर्म है जो स्थानीय खरीदारों और विक्रेताओं को जोड़ता है। हम उपयोगकर्ताओं को कृषि उत्पादों, किराने का सामान, हस्तशिल्प और अन्य स्थानीय उत्पादों को सूचीबद्ध करने, खोजने और खरीदने की सुविधा प्रदान करते हैं। इसके अलावा, DesiMart में एक विशेष "किराये पर दें" (Rent) फीचर है जो उपयोगकर्ताओं को मशीनरी, वाहन, दुकान, कमरे और अन्य वस्तुओं को किराये पर देने की सुविधा देता है।'
+                  ? 'DesiMart एक ऑनलाइन मार्केटप्लेस प्लेटफॉर्म है जो स्थानीय खरीदारों और विक्रेताओं को जोड़ता है। हम उपयोगकर्ताओं को कृषि Products, किराने का सामान, हस्तशिल्प और अन्य स्थानीय Products को सूचीबद्ध करने, खोजने और खरीदने की सुविधा प्रदान करते हैं। इसके अलावा, DesiMart में एक विशेष "किराये पर दें" (Rent) फीचर है जो उपयोगकर्ताओं को मशीनरी, वाहन, दुकान, कमरे और अन्य वस्तुओं को किराये पर देने की सुविधा देता है।'
                   : 'DesiMart is an online marketplace platform that connects local buyers and sellers. We provide facilities for users to list, discover, and purchase agricultural products, groceries, handicrafts, and other local products. Additionally, DesiMart features a unique "Rent" feature that allows users to rent out machinery, vehicles, shops, rooms, and other items.'}
               </p>
             </section>
@@ -64,7 +64,7 @@ const TermsConditions = () => {
                 {language === 'hi' ? 'विक्रेता के रूप में, आप सहमत हैं:' : 'As a seller, you agree to:'}
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                <li>{language === 'hi' ? 'उत्पादों का सटीक विवरण और छवियां प्रदान करना' : 'Provide accurate descriptions and images of products'}</li>
+                <li>{language === 'hi' ? 'Products का सटीक विवरण और छवियां प्रदान करना' : 'Provide accurate descriptions and images of products'}</li>
                 <li>{language === 'hi' ? 'सही मूल्य निर्धारण जानकारी बनाए रखना' : 'Maintain correct pricing information'}</li>
                 <li>{language === 'hi' ? 'सभी लागू कानूनों और विनियमों का पालन करना' : 'Comply with all applicable laws and regulations'}</li>
                 <li>{language === 'hi' ? 'खरीदारों के साथ सम्मानजनक व्यवहार करना' : 'Deal respectfully with buyers'}</li>
@@ -80,7 +80,7 @@ const TermsConditions = () => {
                 {language === 'hi' ? 'खरीदार के रूप में, आप सहमत हैं:' : 'As a buyer, you agree to:'}
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                <li>{language === 'hi' ? 'खरीदने से पहले उत्पाद विवरण पढ़ना' : 'Read product descriptions before purchasing'}</li>
+                <li>{language === 'hi' ? 'खरीदने से पहले Product विवरण पढ़ना' : 'Read product descriptions before purchasing'}</li>
                 <li>{language === 'hi' ? 'विक्रेताओं के साथ सद्भावना से व्यवहार करना' : 'Deal in good faith with sellers'}</li>
                 <li>{language === 'hi' ? 'सहमत लेनदेन को पूरा करना' : 'Complete agreed transactions'}</li>
                 <li>{language === 'hi' ? 'सच्ची और उचित समीक्षाएं प्रदान करना' : 'Provide honest and fair reviews'}</li>
@@ -95,7 +95,7 @@ const TermsConditions = () => {
                 {language === 'hi' ? 'निम्नलिखित सामग्री सख्त वर्जित है:' : 'The following content is strictly prohibited:'}
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                <li>{language === 'hi' ? 'अवैध उत्पाद या सेवाएं' : 'Illegal products or services'}</li>
+                <li>{language === 'hi' ? 'अवैध Product या सेवाएं' : 'Illegal products or services'}</li>
                 <li>{language === 'hi' ? 'नकली या चोरी का सामान' : 'Counterfeit or stolen goods'}</li>
                 <li>{language === 'hi' ? 'भ्रामक या धोखाधड़ी वाली लिस्टिंग' : 'Misleading or fraudulent listings'}</li>
                 <li>{language === 'hi' ? 'आपत्तिजनक या अश्लील सामग्री' : 'Offensive or obscene content'}</li>
@@ -109,7 +109,7 @@ const TermsConditions = () => {
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 {language === 'hi' 
-                  ? 'DesiMart खरीदारों और विक्रेताओं के बीच सीधे संपर्क की सुविधा प्रदान करता है। सभी लेनदेन सीधे पार्टियों के बीच होते हैं। हम भुगतान या उत्पाद की गुणवत्ता की गारंटी नहीं देते हैं।'
+                  ? 'DesiMart खरीदारों और विक्रेताओं के बीच सीधे संपर्क की सुविधा प्रदान करता है। सभी लेनदेन सीधे पार्टियों के बीच होते हैं। हम भुगतान या Product की गुणवत्ता की गारंटी नहीं देते हैं।'
                   : 'DesiMart facilitates direct contact between buyers and sellers. All transactions occur directly between parties. We do not guarantee payment or product quality.'}
               </p>
             </section>

@@ -18,7 +18,7 @@ const Header = () => {
   // Navigation menu items
   const menuItems = [
     { path: '/', label: 'Home' },
-    { path: '/products', label: 'Browse Products' },
+    { path: '/products', label: 'All Products' },
   ];
 
   const handleSell = () => {

@@ -17,7 +17,7 @@ export interface Category {
 export const categories: Category[] = [
   {
     id: 'deshi-products',
-    name: { en: 'Deshi Products', hi: 'देशी उत्पाद' },
+    name: { en: 'Deshi Products', hi: 'देशी Product' },
     icon: '🥛',
     subCategories: [
       { 

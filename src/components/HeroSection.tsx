@@ -34,7 +34,7 @@ const HeroSection = () => {
             {t('hero.badge')}
           </div>
 
-          <h1 className="font-display text-4xl md:text-6xl font-bold text-foreground leading-tight mb-6">
+          <h1 className="font-display text-4xl md:text-6xl font-bold text-foreground leading-tight mb-10">
             {t('hero.title1')}{' '}
             <span className="text-gradient">{t('hero.titleHighlight')}</span>
             {' '}{t('hero.title2')}

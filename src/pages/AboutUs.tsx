@@ -37,7 +37,7 @@ const AboutUs = () => {
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 {language === 'hi' 
-                  ? 'DesiMart की शुरुआत एक साधारण विचार से हुई - स्थानीय किसानों, कारीगरों और छोटे व्यापारियों को उनके समुदाय के ग्राहकों से जोड़ना। हमने देखा कि कई प्रतिभाशाली उत्पादक अपने उत्पादों को बेचने के लिए संघर्ष कर रहे थे, जबकि ग्राहक ताजा और स्थानीय उत्पादों की तलाश में थे।'
+                  ? 'DesiMart की शुरुआत एक साधारण विचार से हुई - स्थानीय किसानों, कारीगरों और छोटे व्यापारियों को उनके समुदाय के ग्राहकों से जोड़ना। हमने देखा कि कई प्रतिभाशाली Productक अपने Products को बेचने के लिए संघर्ष कर रहे थे, जबकि ग्राहक ताजा और स्थानीय Products की तलाश में थे।'
                   : 'DesiMart started with a simple idea - connecting local farmers, artisans, and small businesses with customers in their community. We noticed that many talented producers struggled to sell their products, while customers were searching for fresh and local products.'}
               </p>
               <p className="text-muted-foreground leading-relaxed">
@@ -54,7 +54,7 @@ const AboutUs = () => {
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 {language === 'hi' 
-                  ? 'हमारा मिशन स्थानीय अर्थव्यवस्था को मजबूत करना और हर किसी को अपने आस-पास के उत्पादों तक आसान पहुंच प्रदान करना है। हम चाहते हैं कि हर किसान, कारीगर और छोटा व्यापारी डिजिटल दुनिया में अपनी पहचान बना सके।'
+                  ? 'हमारा मिशन स्थानीय अर्थव्यवस्था को मजबूत करना और हर किसी को अपने आस-पास के Products तक आसान पहुंच प्रदान करना है। हम चाहते हैं कि हर किसान, कारीगर और छोटा व्यापारी डिजिटल दुनिया में अपनी पहचान बना सके।'
                   : 'Our mission is to strengthen the local economy and provide everyone with easy access to products around them. We want every farmer, artisan, and small business owner to establish their identity in the digital world.'}
               </p>
             </section>
@@ -150,10 +150,10 @@ const AboutUs = () => {
                 {language === 'hi' ? 'हम क्या प्रदान करते हैं' : 'What We Offer'}
               </h2>
               <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                <li>{language === 'hi' ? 'ताजा कृषि उत्पाद सीधे किसानों से' : 'Fresh agricultural products directly from farmers'}</li>
-                <li>{language === 'hi' ? 'स्थानीय किराने का सामान और घरेलू उत्पाद' : 'Local groceries and household products'}</li>
+                <li>{language === 'hi' ? 'ताजा कृषि Product सीधे किसानों से' : 'Fresh agricultural products directly from farmers'}</li>
+                <li>{language === 'hi' ? 'स्थानीय किराने का सामान और घरेलू Product' : 'Local groceries and household products'}</li>
                 <li>{language === 'hi' ? 'हस्तशिल्प और कारीगरी का सामान' : 'Handicrafts and artisan goods'}</li>
-                <li>{language === 'hi' ? 'डेयरी उत्पाद और बेकरी आइटम' : 'Dairy products and bakery items'}</li>
+                <li>{language === 'hi' ? 'डेयरी Product और बेकरी आइटम' : 'Dairy products and bakery items'}</li>
                 <li>{language === 'hi' ? 'मशीनरी और उपकरण किराए पर (विशेष फीचर)' : 'Machinery and equipment for rent (unique feature)'}</li>
                 <li>{language === 'hi' ? 'वाहन, दुकान, कमरे किराये पर' : 'Vehicles, shops, rooms for rent'}</li>
                 <li>{language === 'hi' ? 'स्थानीय सेवाएं और बहुत कुछ' : 'Local services and much more'}</li>
@@ -167,12 +167,12 @@ const AboutUs = () => {
               </h2>
               <ul className="list-disc list-inside text-muted-foreground space-y-2">
                 <li>{language === 'hi' ? 'सीधे विक्रेताओं से संपर्क - कोई बिचौलिया नहीं' : 'Direct contact with sellers - no middlemen'}</li>
-                <li>{language === 'hi' ? 'GPS-आधारित खोज से आस-पास के उत्पाद खोजें' : 'Find nearby products with GPS-based search'}</li>
+                <li>{language === 'hi' ? 'GPS-आधारित खोज से आस-पास के Product खोजें' : 'Find nearby products with GPS-based search'}</li>
                 <li>{language === 'hi' ? 'Hindi और English दोनों में उपलब्ध' : 'Available in both Hindi and English'}</li>
                 <li>{language === 'hi' ? 'विक्रेताओं के लिए मुफ्त लिस्टिंग' : 'Free listing for sellers'}</li>
                 <li>{language === 'hi' ? 'बेचें और किराये पर दें - दोनों विकल्प' : 'Sell and Rent - both options available'}</li>
                 <li>{language === 'hi' ? 'स्थानीय अर्थव्यवस्था को सपोर्ट करें' : 'Support the local economy'}</li>
-                <li>{language === 'hi' ? 'ताजा और गुणवत्ता वाले उत्पाद' : 'Fresh and quality products'}</li>
+                <li>{language === 'hi' ? 'ताजा और गुणवत्ता वाले Product' : 'Fresh and quality products'}</li>
               </ul>
             </section>
 
@@ -186,7 +186,7 @@ const AboutUs = () => {
               </div>
               <p className="text-muted-foreground leading-relaxed">
                 {language === 'hi' 
-                  ? 'चाहे आप एक किसान हों, कारीगर हों, या छोटे व्यापारी - DesiMart पर अपने उत्पादों को मुफ्त में सूचीबद्ध करें और अपने समुदाय तक पहुंचें। खरीदार के रूप में, अपने आस-पास के ताजा और स्थानीय उत्पादों की खोज करें।'
+                  ? 'चाहे आप एक किसान हों, कारीगर हों, या छोटे व्यापारी - DesiMart पर अपने Products को मुफ्त में सूचीबद्ध करें और अपने समुदाय तक पहुंचें। खरीदार के रूप में, अपने आस-पास के ताजा और स्थानीय Products की खोज करें।'
                   : 'Whether you are a farmer, artisan, or small business owner - list your products for free on DesiMart and reach your community. As a buyer, discover fresh and local products near you.'}
               </p>
             </section>

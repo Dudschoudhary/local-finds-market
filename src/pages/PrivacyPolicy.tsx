@@ -45,7 +45,7 @@ const PrivacyPolicy = () => {
                   <li>{language === 'hi' ? 'नाम और संपर्क जानकारी (ईमेल, फोन नंबर)' : 'Name and contact information (email, phone number)'}</li>
                   <li>{language === 'hi' ? 'खाता क्रेडेंशियल्स' : 'Account credentials'}</li>
                   <li>{language === 'hi' ? 'स्थान डेटा (जब आप अनुमति देते हैं)' : 'Location data (when you grant permission)'}</li>
-                  <li>{language === 'hi' ? 'उत्पाद लिस्टिंग विवरण' : 'Product listing details'}</li>
+                  <li>{language === 'hi' ? 'Product लिस्टिंग विवरण' : 'Product listing details'}</li>
                 </ul>
 
                 <h3 className="text-xl font-medium text-foreground">

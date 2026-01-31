@@ -211,7 +211,7 @@ const ContactUs = () => {
                     </h4>
                     <p className="text-sm text-muted-foreground mt-1">
                       {language === 'hi' 
-                        ? 'अकाउंट बनाएं, "उत्पाद जोड़ें" पर क्लिक करें और अपने उत्पाद की जानकारी भरें। यह मुफ्त है!'
+                        ? 'अकाउंट बनाएं, "Product जोड़ें" पर क्लिक करें और अपने Product की जानकारी भरें। यह मुफ्त है!'
                         : 'Create an account, click "Add Product" and fill in your product details. It\'s free!'}
                     </p>
                   </div>
@@ -222,7 +222,7 @@ const ContactUs = () => {
                     </h4>
                     <p className="text-sm text-muted-foreground mt-1">
                       {language === 'hi' 
-                        ? 'उत्पाद जोड़ते समय "Rent" टैब चुनें और मशीनरी, वाहन, दुकान या कमरे को किराये पर दें।'
+                        ? 'Product जोड़ते समय "Rent" टैब चुनें और मशीनरी, वाहन, दुकान या कमरे को किराये पर दें।'
                         : 'Select the "Rent" tab when adding a product and rent out machinery, vehicles, shops or rooms.'}
                     </p>
                   </div>
@@ -233,7 +233,7 @@ const ContactUs = () => {
                     </h4>
                     <p className="text-sm text-muted-foreground mt-1">
                       {language === 'hi' 
-                        ? 'नहीं, DesiMart पर उत्पाद सूचीबद्ध करना पूरी तरह से मुफ्त है।'
+                        ? 'नहीं, DesiMart पर Product सूचीबद्ध करना पूरी तरह से मुफ्त है।'
                         : 'No, listing products on DesiMart is completely free.'}
                     </p>
                   </div>
@@ -244,7 +244,7 @@ const ContactUs = () => {
                     </h4>
                     <p className="text-sm text-muted-foreground mt-1">
                       {language === 'hi' 
-                        ? 'उत्पाद पृष्ठ पर विक्रेता का फोन नंबर दिया होता है। आप सीधे कॉल या WhatsApp कर सकते हैं।'
+                        ? 'Product पृष्ठ पर विक्रेता का फोन नंबर दिया होता है। आप सीधे कॉल या WhatsApp कर सकते हैं।'
                         : 'The seller\'s phone number is provided on the product page. You can call or WhatsApp directly.'}
                     </p>
                   </div>
