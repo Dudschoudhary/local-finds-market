@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
-import { Quote, Trash2, Loader2, Pencil, X } from 'lucide-react';
+import { Quote, Trash2, Loader2, Pencil, X, Youtube } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -21,6 +22,7 @@ interface Review {
 
 const Reviews = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -176,10 +178,24 @@ const Reviews = () => {
         {/* Page Header */}
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
-            Customer Reviews
+            {t('reviews.title')}
           </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            See what our customers are saying about their experience with DesiMart
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
+            {t('reviews.subtitle')}
+          </p>
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-2">
+            {t('reviews.callToAction')} 
+          </p>
+          <a
+            href="https://www.youtube.com/@vigatbahi"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-red-600 font-bold text-2xl underline"
+          >
+            Vigat Bahi YouTube Channel 
+          </a>
+          <p className="text-primary font-medium max-w-2xl mx-auto">
+            {t('reviews.feedbackThanks')}
           </p>
         </div>
 

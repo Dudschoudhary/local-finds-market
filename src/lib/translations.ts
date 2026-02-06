@@ -215,6 +215,23 @@ export const translations = {
     perMonth: { en: 'per month', hi: 'प्रति माह' },
   },
 
+  // Reviews Page
+  reviews: {
+    title: { en: 'Customer Reviews', hi: 'ग्राहक समीक्षाएं' },
+    subtitle: {
+      en: 'See what our customers are saying about their experience with DesiMart!',
+      hi: 'जानें कि हमारे ग्राहक DesiMart के साथ अपने अनुभव के बारे में क्या कह रहे हैं।'
+    },
+    callToAction: {
+      en: 'If you would like your name to be included in this list, we would love to hear from you. Please visit our YouTube channel and share your valuable review by commenting on our videos.',
+      hi: 'यदि आप चाहते हैं कि आपका नाम भी इस सूची में शामिल हो, तो हमें आपकी प्रतिक्रिया जानकर खुशी होगी। कृपया हमारे YouTube चैनल पर जाएँ और वीडियो पर कमेंट करके अपना रिव्यू साझा करें।'
+    },
+    feedbackThanks: {
+      en: 'Your feedback means a lot to us!',
+      hi: 'आपकी प्रतिक्रिया हमारे लिए बहुत महत्वपूर्ण है।'
+    },
+  },
+
   // Toast Messages
   toasts: {
     locationCaptured: { en: 'Location captured', hi: 'स्थान कैप्चर किया गया' },
