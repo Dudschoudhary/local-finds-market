@@ -1,5 +1,5 @@
 // filepath: /home/mentem/Dudaram/localmart/frountend/src/components/CategoryAccordionMenu.tsx
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { categories, SubCategory } from '@/data/categories';
@@ -19,6 +19,9 @@ const CategoryAccordionMenu = ({ onSelect, className }: CategoryAccordionMenuPro
   const [openMainCategory, setOpenMainCategory] = useState<string | null>(null);
   // Track which sub-category with nested items is open
   const [openSubCategory, setOpenSubCategory] = useState<string | null>(null);
+  
+  // Refs for scrolling
+  const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const handleMainCategoryClick = (categoryId: string) => {
     // Toggle: if already open, close it; otherwise open it and close others
@@ -28,6 +31,14 @@ const CategoryAccordionMenu = ({ onSelect, className }: CategoryAccordionMenuPro
     } else {
       setOpenMainCategory(categoryId);
       setOpenSubCategory(null); // Reset sub-category when switching main category
+      
+      // Scroll the clicked category into view after a small delay for animation
+      setTimeout(() => {
+        categoryRefs.current[categoryId]?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 100);
     }
   };
 
@@ -57,7 +68,11 @@ const CategoryAccordionMenu = ({ onSelect, className }: CategoryAccordionMenuPro
   return (
     <div className={cn("w-full bg-card rounded-xl border border-border overflow-hidden", className)}>
       {categories.map((category) => (
-        <div key={category.id} className="border-b border-border last:border-b-0">
+        <div 
+          key={category.id} 
+          className="border-b border-border last:border-b-0"
+          ref={(el) => { categoryRefs.current[category.id] = el; }}
+        >
           {/* Main Category Header */}
           <button
             onClick={() => handleMainCategoryClick(category.id)}

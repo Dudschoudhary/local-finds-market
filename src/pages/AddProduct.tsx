@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -102,6 +102,10 @@ const CategoryPickerAccordion = ({ selectedCategory, onSelect }: CategoryPickerA
   const [isOpen, setIsOpen] = useState(false);
   const [openMainCategory, setOpenMainCategory] = useState<string | null>(null);
   const [openSubCategory, setOpenSubCategory] = useState<string | null>(null);
+  
+  // Ref for scrolling
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const categoryRefs = React.useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const handleMainCategoryClick = (categoryId: string) => {
     if (openMainCategory === categoryId) {
@@ -110,6 +114,19 @@ const CategoryPickerAccordion = ({ selectedCategory, onSelect }: CategoryPickerA
     } else {
       setOpenMainCategory(categoryId);
       setOpenSubCategory(null);
+      
+      // Scroll to the clicked category within the dropdown
+      setTimeout(() => {
+        const element = categoryRefs.current[categoryId];
+        if (element && dropdownRef.current) {
+          const dropdown = dropdownRef.current;
+          const elementTop = element.offsetTop;
+          dropdown.scrollTo({
+            top: Math.max(0, elementTop - 10),
+            behavior: 'smooth'
+          });
+        }
+      }, 50);
     }
   };
 
@@ -166,9 +183,16 @@ const CategoryPickerAccordion = ({ selectedCategory, onSelect }: CategoryPickerA
 
       {/* Dropdown Panel */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg max-h-[400px] overflow-y-auto">
+        <div 
+          ref={dropdownRef}
+          className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg max-h-[400px] overflow-y-auto"
+        >
           {categories.map((cat) => (
-            <div key={cat.id} className="border-b border-border/50 last:border-b-0">
+            <div 
+              key={cat.id} 
+              className="border-b border-border/50 last:border-b-0"
+              ref={(el) => { categoryRefs.current[cat.id] = el; }}
+            >
               {/* Main Category */}
               <button
                 type="button"
