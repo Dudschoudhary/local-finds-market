@@ -4,7 +4,7 @@ export const mockProducts: Product[] = [
   {
     id: '1',
     sellerName: 'Ramesh Patel',
-    contactNumber: '9876543210',
+    contactNumber: '9468650730',
     productName: 'Pure Desi Cow Ghee',
     category: 'dairy',
     quantity: '1 kg',

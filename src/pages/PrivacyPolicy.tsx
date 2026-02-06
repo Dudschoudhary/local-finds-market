@@ -106,6 +106,27 @@ const PrivacyPolicy = () => {
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">
+                {language === 'hi' ? 'तृतीय-पक्ष विज्ञापन (Google AdSense)' : 'Third-Party Advertising (Google AdSense)'}
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                {language === 'hi' 
+                  ? 'हम अपनी वेबसाइट पर विज्ञापन प्रदर्शित करने के लिए Google AdSense का उपयोग करते हैं। Google AdSense तृतीय-पक्ष विज्ञापन कंपनियों का उपयोग करता है जो आपकी रुचियों के आधार पर विज्ञापन प्रदर्शित कर सकती हैं।'
+                  : 'We use Google AdSense to display advertisements on our website. Google AdSense uses third-party advertising companies that may display ads based on your interests.'}
+              </p>
+              <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <li>{language === 'hi' ? 'Google, एक तृतीय-पक्ष विक्रेता के रूप में, हमारी साइट पर विज्ञापन दिखाने के लिए कुकीज़ का उपयोग करता है।' : 'Google, as a third-party vendor, uses cookies to serve ads on our site.'}</li>
+                <li>{language === 'hi' ? 'Google का DART कुकी का उपयोग उपयोगकर्ताओं को हमारी साइट और इंटरनेट पर अन्य साइटों पर उनकी विज़िट के आधार पर विज्ञापन प्रदर्शित करने में सक्षम बनाता है।' : "Google's use of the DART cookie enables it to serve ads to users based on their visit to our site and other sites on the Internet."}</li>
+                <li>{language === 'hi' ? 'उपयोगकर्ता Google विज्ञापन और सामग्री नेटवर्क गोपनीयता नीति पर जाकर DART कुकी के उपयोग से ऑप्ट आउट कर सकते हैं।' : 'Users may opt out of the use of the DART cookie by visiting the Google Ad and Content Network Privacy Policy.'}</li>
+              </ul>
+              <p className="text-muted-foreground leading-relaxed">
+                {language === 'hi' 
+                  ? 'अधिक जानकारी के लिए, कृपया Google की गोपनीयता नीति देखें: https://policies.google.com/privacy'
+                  : 'For more information, please visit Google\'s Privacy Policy: https://policies.google.com/privacy'}
+              </p>
+            </section>
+
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold text-foreground">
                 {language === 'hi' ? 'डेटा सुरक्षा' : 'Data Security'}
               </h2>
               <p className="text-muted-foreground leading-relaxed">

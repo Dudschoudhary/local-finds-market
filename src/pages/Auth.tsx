@@ -88,7 +88,7 @@ const AuthPage: React.FC = () => {
                 <Label htmlFor="contactNumber">{t('addProduct.contactNumber')}</Label>
                 <Input
                   id="contactNumber"
-                  placeholder="e.g., 9876543210"
+                  placeholder="e.g., 9468650730"
                   value={contactNumber}
                   onChange={(e) => setContactNumber(e.target.value)}
                 />

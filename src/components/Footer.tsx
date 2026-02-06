@@ -143,6 +143,11 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/disclaimer" className="text-slate-400 hover:text-white hover:pl-1 transition-all duration-300 text-sm">
+                  Disclaimer
+                </Link>
+              </li>
+              <li>
                 <Link to="/reviews" className="text-slate-400 hover:text-white hover:pl-1 transition-all duration-300 text-sm">
                   Reviews
                 </Link>
@@ -157,20 +162,21 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                 <span className="text-slate-400 text-sm">
-                  Nai Undari, Jodhpur,<br />
-                  Rajasthan 342001, India
+                  Baldev Nagar,<br />
+                  Jodhpur, Rajasthan 342003<br />
+                  India,
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <a href="tel:+919876543210" className="text-slate-400 hover:text-white transition-colors text-sm">
-                  +91-9876543210
+                <a href="tel:+919468650730" className="text-slate-400 hover:text-white transition-colors text-sm">
+                  +91-9468650730
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary flex-shrink-0" />
-                <a href="mailto:contact@desimart.in" className="text-slate-400 hover:text-white transition-colors text-sm">
-                  contact@desimart.in
+                <a href="mailto:dudaram656@gmail.com" className="text-slate-400 hover:text-white transition-colors text-sm">
+                  dudaram656@gmail.com
                 </a>
               </li>
             </ul>

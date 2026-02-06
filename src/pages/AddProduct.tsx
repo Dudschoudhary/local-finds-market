@@ -572,7 +572,7 @@ const AddProduct = () => {
                 <Input
                   id="contactNumber"
                   type="tel"
-                  placeholder="e.g., 9876543210"
+                  placeholder="e.g., 9468650730"
                   value={formData.contactNumber}
                   onChange={(e) => handleChange('contactNumber', e.target.value)}
                   className="pl-10"

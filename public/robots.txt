@@ -12,3 +12,10 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Sitemap
+Sitemap: https://desimart.me/sitemap.xml
+
+# Disallow admin/private pages
+Disallow: /dashboard
+Disallow: /auth
