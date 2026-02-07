@@ -113,8 +113,8 @@ const Dashboard: React.FC = () => {
       <Header />
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
-          <div className="mb-6 flex items-center justify-between">
-            <h1 className="font-display text-2xl font-bold">{t('dashboard.title')}</h1>
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <h1 className="font-display text-xl sm:text-2xl font-bold">{t('dashboard.title')}</h1>
             <div className="text-sm text-muted-foreground">{user.name ?? user.contactNumber}</div>
           </div>
 
@@ -138,56 +138,71 @@ const Dashboard: React.FC = () => {
                     <h2 className="font-semibold mb-3">{t('dashboard.myListings')}</h2>
                     <div className="grid gap-4">
                       {mySales.map((p: any) => (
-                        <div key={p.id} className="rounded-xl border border-border p-4 bg-card flex items-start gap-4">
-                          <img src={p.images?.[0] ?? 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'} alt={p.productName} className="h-24 w-24 object-cover rounded-lg" />
-                          <div className="flex-1">
-                            <div className="flex items-start justify-between gap-4">
-                              <div>
-                                <h3 className="font-semibold text-lg">{p.productName}</h3>
-                                <div className="text-sm text-muted-foreground">₹{Number(p.price).toLocaleString('en-IN')}</div>
+                        <div key={p.id} className="rounded-xl border border-border p-3 sm:p-4 bg-card">
+                          <div className="flex gap-3 sm:gap-4">
+                            {/* Image */}
+                            <img src={p.images?.[0] ?? 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'} alt={p.productName} className="h-20 w-20 sm:h-24 sm:w-24 object-cover rounded-lg flex-shrink-0" />
+                            
+                            {/* Content Area */}
+                            <div className="flex-1 min-w-0">
+                              {/* Desktop: Row layout with buttons on right */}
+                              <div className="hidden sm:flex sm:items-start sm:justify-between sm:gap-4">
+                                <div className="min-w-0 flex-1">
+                                  <h3 className="font-semibold text-lg truncate">{p.productName}</h3>
+                                  <div className="text-sm text-muted-foreground">₹{Number(p.price).toLocaleString('en-IN')}</div>
+                                </div>
+                                <div className="flex gap-2 flex-shrink-0">
+                                  <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-2"><Pencil className="h-4 w-4" /> {t('dashboard.edit')}</Button>
+                                  <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-2"><Trash className="h-4 w-4" /> {t('dashboard.delete')}</Button>
+                                </div>
                               </div>
-                              <div className="flex gap-2">
-                                <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-2"><Pencil className="h-4 w-4" /> {t('dashboard.edit')}</Button>
-                                <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-2"><Trash className="h-4 w-4" /> {t('dashboard.delete')}</Button>
+                              
+                              {/* Mobile: Stacked layout */}
+                              <div className="sm:hidden">
+                                <h3 className="font-semibold text-base truncate">{p.productName}</h3>
+                                <div className="text-sm text-muted-foreground">₹{Number(p.price).toLocaleString('en-IN')}</div>
+                                <div className="flex gap-2 mt-2">
+                                  <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-1 text-xs"><Pencil className="h-3 w-3" /> {t('dashboard.edit')}</Button>
+                                  <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-1 text-xs"><Trash className="h-3 w-3" /> {t('dashboard.delete')}</Button>
+                                </div>
                               </div>
                             </div>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-3 line-clamp-2">{p.description}</p>
 
-                            <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{p.description}</p>
-
-                            {/* Inline edit form */}
-                            {editingId === p.id && (
-                              <div className="mt-4 p-3 border border-border rounded-lg bg-background">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                  <div>
-                                    <Label>{t('addProduct.productName')}</Label>
-                                    <Input value={form.productName} onChange={(e) => handleChange('productName', e.target.value)} />
-                                  </div>
-                                  <div>
-                                    <Label>{t('addProduct.price')}</Label>
-                                    <Input type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)} />
-                                  </div>
-                                  <div>
-                                    <Label>{t('addProduct.quantity')}</Label>
-                                    <Input value={form.quantity} onChange={(e) => handleChange('quantity', e.target.value)} />
-                                  </div>
-                                  <div>
-                                    <Label>{t('addProduct.address')}</Label>
-                                    <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} />
-                                  </div>
+                          {/* Inline edit form */}
+                          {editingId === p.id && (
+                            <div className="mt-4 p-3 border border-border rounded-lg bg-background">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                  <Label>{t('addProduct.productName')}</Label>
+                                  <Input value={form.productName} onChange={(e) => handleChange('productName', e.target.value)} />
                                 </div>
-
-                                <div className="mt-3">
-                                  <Label>{t('addProduct.description')}</Label>
-                                  <Textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} />
+                                <div>
+                                  <Label>{t('addProduct.price')}</Label>
+                                  <Input type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)} />
                                 </div>
-
-                                <div className="mt-3 flex items-center gap-2">
-                                  <Button onClick={handleSave} disabled={saving}>{saving ? t('common.loading') : t('common.success')}</Button>
-                                  <Button variant="ghost" onClick={cancelEdit}><X className="h-4 w-4" /></Button>
+                                <div>
+                                  <Label>{t('addProduct.quantity')}</Label>
+                                  <Input value={form.quantity} onChange={(e) => handleChange('quantity', e.target.value)} />
+                                </div>
+                                <div>
+                                  <Label>{t('addProduct.address')}</Label>
+                                  <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} />
                                 </div>
                               </div>
-                            )}
-                          </div>
+
+                              <div className="mt-3">
+                                <Label>{t('addProduct.description')}</Label>
+                                <Textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} />
+                              </div>
+
+                              <div className="mt-3 flex items-center gap-2">
+                                <Button onClick={handleSave} disabled={saving}>{saving ? t('common.loading') : t('common.success')}</Button>
+                                <Button variant="ghost" onClick={cancelEdit}><X className="h-4 w-4" /></Button>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -200,60 +215,83 @@ const Dashboard: React.FC = () => {
                     <h2 className="font-semibold mb-3">{t('addProduct.rent')}</h2>
                     <div className="grid gap-4">
                       {myRentals.map((p: any) => (
-                        <div key={p.id} className="rounded-xl border border-border p-4 bg-card flex items-start gap-4">
-                          <img src={p.images?.[0] ?? 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'} alt={p.productName} className="h-24 w-24 object-cover rounded-lg" />
-                          <div className="flex-1">
-                            <div className="flex items-start justify-between gap-4">
-                              <div>
-                                <h3 className="font-semibold text-lg">{p.productName}</h3>
-                                <div className="text-sm text-muted-foreground">{p.rentalType ? `${p.rentalType.charAt(0).toUpperCase() + p.rentalType.slice(1)} • ` : ''}₹{Number(p.rentalPrice).toLocaleString('en-IN')} ({t('addProduct.rent')})</div>
+                        <div key={p.id} className="rounded-xl border border-border p-3 sm:p-4 bg-card">
+                          <div className="flex gap-3 sm:gap-4">
+                            {/* Image */}
+                            <img src={p.images?.[0] ?? 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop'} alt={p.productName} className="h-20 w-20 sm:h-24 sm:w-24 object-cover rounded-lg flex-shrink-0" />
+                            
+                            {/* Content Area */}
+                            <div className="flex-1 min-w-0">
+                              {/* Desktop: Row layout with buttons and badge on right */}
+                              <div className="hidden sm:flex sm:items-start sm:justify-between sm:gap-4">
+                                <div className="min-w-0 flex-1">
+                                  <h3 className="font-semibold text-lg truncate">{p.productName}</h3>
+                                  <div className="text-sm text-muted-foreground">{p.rentalType ? `${p.rentalType.charAt(0).toUpperCase() + p.rentalType.slice(1)} • ` : ''}₹{Number(p.rentalPrice).toLocaleString('en-IN')} ({t('addProduct.rent')})</div>
+                                </div>
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                  {p.rentalStatus === 'available' && (
+                                    <Button size="sm" onClick={() => handleMarkRented(p.id)}>{t('dashboard.markAsSold')}</Button>
+                                  )}
+                                  <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-2"><Pencil className="h-4 w-4" /> {t('dashboard.edit')}</Button>
+                                  <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-2"><Trash className="h-4 w-4" /> {t('dashboard.delete')}</Button>
+                                  <span className={`text-sm px-2 py-1 rounded ${p.rentalStatus === 'available' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}`}>{p.rentalStatus === 'available' ? t('productCard.available') : t('productCard.rented')}</span>
+                                </div>
                               </div>
-                              <div className="flex gap-2 items-center">
-                                <span className={`text-sm px-2 py-1 rounded ${p.rentalStatus === 'available' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}`}>{p.rentalStatus === 'available' ? t('productCard.available') : t('productCard.rented')}</span>
-                                {p.rentalStatus === 'available' && (
-                                  <Button size="sm" onClick={() => handleMarkRented(p.id)}>{t('dashboard.markAsSold')}</Button>
-                                )}
-                                <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-2"><Pencil className="h-4 w-4" /> {t('dashboard.edit')}</Button>
-                                <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-2"><Trash className="h-4 w-4" /> {t('dashboard.delete')}</Button>
+                              
+                              {/* Mobile: Stacked layout */}
+                              <div className="sm:hidden">
+                                <div className="flex items-start justify-between gap-2">
+                                  <div className="min-w-0 flex-1">
+                                    <h3 className="font-semibold text-base truncate">{p.productName}</h3>
+                                    <div className="text-xs text-muted-foreground">{p.rentalType ? `${p.rentalType.charAt(0).toUpperCase() + p.rentalType.slice(1)} • ` : ''}₹{Number(p.rentalPrice).toLocaleString('en-IN')} ({t('addProduct.rent')})</div>
+                                  </div>
+                                  <span className={`text-xs px-2 py-1 rounded flex-shrink-0 ${p.rentalStatus === 'available' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}`}>{p.rentalStatus === 'available' ? t('productCard.available') : t('productCard.rented')}</span>
+                                </div>
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                  {p.rentalStatus === 'available' && (
+                                    <Button size="sm" onClick={() => handleMarkRented(p.id)} className="text-xs">{t('dashboard.markAsSold')}</Button>
+                                  )}
+                                  <Button variant="outline" size="sm" onClick={() => startEdit(p)} className="gap-1 text-xs"><Pencil className="h-3 w-3" /> {t('dashboard.edit')}</Button>
+                                  <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)} className="gap-1 text-xs"><Trash className="h-3 w-3" /> {t('dashboard.delete')}</Button>
+                                </div>
                               </div>
                             </div>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-3 line-clamp-2">{p.description}</p>
 
-                            <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{p.description}</p>
-
-                            {/* Inline edit form for rentals */}
-                            {editingId === p.id && (
-                              <div className="mt-4 p-3 border border-border rounded-lg bg-background">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                  <div>
-                                    <Label>{t('addProduct.productName')}</Label>
-                                    <Input value={form.productName} onChange={(e) => handleChange('productName', e.target.value)} />
-                                  </div>
-                                  <div>
-                                    <Label>{t('addProduct.price')}</Label>
-                                    <Input type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)} />
-                                  </div>
-                                  <div>
-                                    <Label>{t('addProduct.quantity')}</Label>
-                                    <Input value={form.quantity} onChange={(e) => handleChange('quantity', e.target.value)} />
-                                  </div>
-                                  <div>
-                                    <Label>{t('addProduct.address')}</Label>
-                                    <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} />
-                                  </div>
+                          {/* Inline edit form for rentals */}
+                          {editingId === p.id && (
+                            <div className="mt-4 p-3 border border-border rounded-lg bg-background">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                  <Label>{t('addProduct.productName')}</Label>
+                                  <Input value={form.productName} onChange={(e) => handleChange('productName', e.target.value)} />
                                 </div>
-
-                                <div className="mt-3">
-                                  <Label>{t('addProduct.description')}</Label>
-                                  <Textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} />
+                                <div>
+                                  <Label>{t('addProduct.price')}</Label>
+                                  <Input type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)} />
                                 </div>
-
-                                <div className="mt-3 flex items-center gap-2">
-                                  <Button onClick={handleSave} disabled={saving}>{saving ? t('common.loading') : t('common.success')}</Button>
-                                  <Button variant="ghost" onClick={cancelEdit}><X className="h-4 w-4" /></Button>
+                                <div>
+                                  <Label>{t('addProduct.quantity')}</Label>
+                                  <Input value={form.quantity} onChange={(e) => handleChange('quantity', e.target.value)} />
+                                </div>
+                                <div>
+                                  <Label>{t('addProduct.address')}</Label>
+                                  <Input value={form.address} onChange={(e) => handleChange('address', e.target.value)} />
                                 </div>
                               </div>
-                            )}
-                          </div>
+
+                              <div className="mt-3">
+                                <Label>{t('addProduct.description')}</Label>
+                                <Textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} />
+                              </div>
+
+                              <div className="mt-3 flex items-center gap-2">
+                                <Button onClick={handleSave} disabled={saving}>{saving ? t('common.loading') : t('common.success')}</Button>
+                                <Button variant="ghost" onClick={cancelEdit}><X className="h-4 w-4" /></Button>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
